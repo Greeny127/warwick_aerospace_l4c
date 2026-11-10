@@ -1,14 +1,13 @@
 /*
  * ascii.js
  *
- * Two effects that draw coloured text characters ("ASCII") on a <canvas>:
- *
- * 1. AsciiHero: plays a short video and draws it as ASCII. Moving the mouse or a finger over it
- *    leaves a glowing trail of brighter, more saturated characters.
+ * Plays a short video on a <canvas> and draws it as a grid of dots or text characters ("ASCII").
+ * Moving the mouse or a finger over it can leave a glowing trail, but the trail is off on this site.
  *
  *      <canvas class="hero__canvas" aria-hidden="true"
- *              data-video="assets/launch.webm assets/launch.mp4"
- *              data-cell-size="18" data-speed="2.5" data-trail-radius="16"></canvas>
+ *              data-video="assets/launch-mix.webm assets/launch-mix.mp4"
+ *              data-cell-size="18" data-speed="2.5" data-trail-radius="16"
+ *              data-trail="off"></canvas>   (data-trail="off" turns the cursor trail off)
  *
  *      data-video          One or more video URLs, separated by spaces. The browser plays the first it supports.
  *      data-cell-size      Font size of each character in px. Bigger = chunkier picture. Default 18.
@@ -17,26 +16,8 @@
  *      data-style          "text" (letters and symbols, the default) or "dots" (a halftone of round dots:
  *                          brighter areas get bigger, brighter dots).
  *
- * 2. AsciiField: a rocket drawn in ASCII, hovering in place with a flickering flame and a drifting
- *    smoke trail. Used as decoration inside page sections.
- *
- *      <canvas class="ascii-field" aria-hidden="true" data-shape="rocket"
- *              data-angle="-30" data-x="0.8" data-y="0.5" data-cell-size="14"></canvas>
- *
- *      data-shape          What to draw. Only "rocket" for now.
- *      data-angle          Rotation in degrees. 0 = flying right, -30 = flying up and to the right.
- *      data-x, data-y      Position of the rocket as a fraction of the canvas (0-1). Default 0.8 and 0.5.
- *      data-size           Length of the rocket as a fraction of the canvas width. Default 0.5.
- *      data-cell-size      Font size of each character in px. Default 14.
- *
- * 3. PageTrail: the same cursor trail, drawn as characters wherever the pointer moves over the page
- *    below the hero. One transparent full-window canvas does it.
- *
- *      <canvas class="ascii-trail" aria-hidden="true" data-page-trail data-cell-size="14"
- *              data-trail-radius="12"></canvas>
- *
  * Colours come from the CSS custom properties --purple-700, --purple-500 and --accent.
- * All canvases are decoration only: keep aria-hidden="true" on them.
+ * The canvas is decoration only: keep aria-hidden="true" on it.
  */
 
 // --- Look and feel: tweak these to change the picture -----------------------
@@ -152,7 +133,7 @@ function rampColor(ramp, value) {
 	return [255, 255, 255];
 }
 
-// --- Cursor trail (shared by the hero and the page-wide overlay) ----------------
+// --- Cursor trail  ----------------
 
 /**
  * Follows the pointer and lights up character cells behind it: a run of blocky, uneven blobs
@@ -422,12 +403,15 @@ class AsciiHero {
 	// ---- Events ----
 
 	watchEvents() {
+		// The cursor trail is on unless the canvas has data-trail="off".
 		// The canvas ignores the mouse, so listen on its parent instead.
-		this.parent.addEventListener('pointermove', (event) => {
-			const rect = this.canvas.getBoundingClientRect();
-			this.trail.move(event.clientX - rect.left, event.clientY - rect.top, performance.now());
-		});
-		this.parent.addEventListener('pointerleave', () => this.trail.leave());
+		if (this.canvas.dataset.trail !== 'off') {
+			this.parent.addEventListener('pointermove', (event) => {
+				const rect = this.canvas.getBoundingClientRect();
+				this.trail.move(event.clientX - rect.left, event.clientY - rect.top, performance.now());
+			});
+			this.parent.addEventListener('pointerleave', () => this.trail.leave());
+		}
 
 		new ResizeObserver(() => {
 			this.measure();
@@ -539,340 +523,11 @@ class AsciiHero {
 	}
 }
 
-// --- The decorative rocket ------------------------------------------------------
-
-/** Sets a fill colour that is white at the given brightness (0-1). Brightness is all that matters here. */
-function shade(ctx, brightness) {
-	ctx.fillStyle = `rgba(255, 255, 255, ${brightness})`;
-}
-
-/**
- * Draws a slender two-stage launch vehicle pointing right, centred on the origin, on a black canvas.
- * Brightness is what matters: the picture is turned into characters afterwards, and brighter means a
- * denser character in a brighter colour. Because the final picture is so coarse, the details that
- * survive are the long thin silhouette, the pale fairing, the dark joints between sections and the
- * exhaust. `length` is the rocket's length in canvas units (the exhaust extends beyond it).
- */
-function drawRocket(ctx, seconds, length) {
-	const L = length;
-	const h = 0.065 * L;         // half the body thickness: long and thin like a real launch vehicle, but thick enough to survive as characters
-	const tail = -0.5 * L;       // x of the engines
-	const nose = 0.5 * L;
-
-	// -- Exhaust: a big, roaring plume. A hot glow at the nozzle, a long flickering flame with bright
-	//    shock diamonds streaming down it, flying sparks, and a wide trail of smoke behind. --
-	const flicker = 1 + 0.14 * Math.sin(seconds * 38) + 0.09 * Math.sin(seconds * 61) + 0.05 * Math.sin(seconds * 97);
-	const plumeLength = 0.85 * L * flicker;
-	const plumeHalf = (f) => h * (0.7 + 1.4 * f) * (1 - 0.8 * f * f);     // wide, billowing outwards, then tapering
-	const jitter = (k) => 1 + 0.2 * Math.sin(seconds * 45 + k * 1.9) + 0.12 * Math.sin(seconds * 83 + k * 3.1);
-
-	const glowRadius = 0.32 * L * (1 + 0.1 * Math.sin(seconds * 31));
-	const glow = ctx.createRadialGradient(tail, 0, 0, tail, 0, glowRadius);
-	glow.addColorStop(0, 'rgba(255, 255, 255, 0.75)');
-	glow.addColorStop(1, 'rgba(255, 255, 255, 0)');
-	ctx.fillStyle = glow;
-	ctx.fillRect(tail - glowRadius, -glowRadius, glowRadius * 2, glowRadius * 2);
-
-	const plume = ctx.createLinearGradient(tail, 0, tail - plumeLength, 0);
-	plume.addColorStop(0, 'rgba(255, 255, 255, 1)');
-	plume.addColorStop(0.4, 'rgba(255, 255, 255, 0.9)');
-	plume.addColorStop(0.8, 'rgba(255, 255, 255, 0.4)');
-	plume.addColorStop(1, 'rgba(255, 255, 255, 0)');
-	ctx.fillStyle = plume;
-	ctx.beginPath();
-	const steps = 20;
-	for (let k = 0; k <= steps; k++) {
-		const f = k / steps;
-		ctx.lineTo(tail - f * plumeLength, -plumeHalf(f) * jitter(k));
-	}
-	for (let k = steps; k >= 0; k--) {
-		const f = k / steps;
-		ctx.lineTo(tail - f * plumeLength, plumeHalf(f) * jitter(k + 40));
-	}
-	ctx.closePath();
-	ctx.fill();
-
-	for (let k = 0; k < 7; k++) {
-		const f = (((k + seconds * 3.6) % 7) / 7) * 0.9;     // diamonds race down the plume
-		ctx.beginPath();
-		ctx.ellipse(tail - f * plumeLength, 0, 0.035 * L * (1 - f), plumeHalf(f) * 0.65, 0, 0, Math.PI * 2);
-		shade(ctx, 1 - f * 0.8);
-		ctx.fill();
-	}
-
-	// Sparks flung out and back from the flame.
-	for (let i = 0; i < 22; i++) {
-		const age = (seconds * 1.6 + hash(i, 1, 7)) % 1;
-		const x = tail - age * (0.5 + 0.9 * hash(i, 2, 7)) * L;
-		const y = (hash(i, 3, 7) - 0.5) * 2 * plumeHalf(Math.min(1, age)) * (1 + age);
-		shade(ctx, 0.9 * (1 - age));
-		ctx.fillRect(x, y, 0.012 * L, 0.012 * L);
-	}
-
-	// A wide trail of smoke well behind the plume, drifting back.
-	for (let i = 0; i < 14; i++) {
-		const age = (seconds * 0.8 + i / 14) % 1;
-		const x = tail - plumeLength * 0.8 - age * 0.7 * L;
-		const y = Math.sin(age * 7 + i) * 0.06 * L * age;
-		const radius = (0.03 + 0.11 * age) * L;
-		const puff = ctx.createRadialGradient(x, y, 0, x, y, radius);
-		puff.addColorStop(0, `rgba(255, 255, 255, ${0.35 * (1 - age)})`);
-		puff.addColorStop(1, 'rgba(255, 255, 255, 0)');
-		ctx.fillStyle = puff;
-		ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-	}
-
-	// -- Landing legs and engine bells at the tail. --
-	ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
-	ctx.lineWidth = 0.006 * L;
-	for (const side of [-1, 1]) {
-		ctx.beginPath();
-		ctx.moveTo(tail + 0.08 * L, side * h);
-		ctx.lineTo(tail - 0.015 * L, side * h * 2.6);
-		ctx.stroke();
-	}
-	shade(ctx, 0.4);
-	ctx.fillRect(tail, -h * 0.75, 0.03 * L, h * 1.5);
-
-	// -- Body: a cylinder lit from above, so it is brightest near the top edge and dark underneath. --
-	const body = ctx.createLinearGradient(0, -h, 0, h);
-	body.addColorStop(0, 'rgba(255, 255, 255, 0.55)');
-	body.addColorStop(0.25, 'rgba(255, 255, 255, 1)');
-	body.addColorStop(0.6, 'rgba(255, 255, 255, 0.7)');
-	body.addColorStop(1, 'rgba(255, 255, 255, 0.35)');
-	ctx.fillStyle = body;
-	ctx.fillRect(tail + 0.03 * L, -h, 0.77 * L, h * 2);
-
-	// -- Fairing: a long pointed nose cone on top. --
-	ctx.beginPath();
-	ctx.moveTo(0.3 * L, -h);
-	ctx.quadraticCurveTo(0.43 * L, -h * 0.9, nose, 0);
-	ctx.quadraticCurveTo(0.43 * L, h * 0.9, 0.3 * L, h);
-	ctx.closePath();
-	ctx.fillStyle = body;
-	ctx.fill();
-
-	// -- Dark soot at the base, and the joints between stages and the fairing. --
-	const soot = ctx.createLinearGradient(tail + 0.03 * L, 0, tail + 0.2 * L, 0);
-	soot.addColorStop(0, 'rgba(0, 0, 0, 0.65)');
-	soot.addColorStop(1, 'rgba(0, 0, 0, 0)');
-	ctx.fillStyle = soot;
-	ctx.fillRect(tail + 0.03 * L, -h, 0.17 * L, h * 2);
-
-	ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-	for (const x of [0.1 * L, 0.3 * L]) ctx.fillRect(x - 0.004 * L, -h, 0.008 * L, h * 2);
-	ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
-	ctx.fillRect(0.1 * L, -h, 0.04 * L, h * 2);   // darker interstage
-
-	// -- Small grid fins near the top of the first stage. --
-	shade(ctx, 0.6);
-	for (const side of [-1, 1]) {
-		ctx.fillRect(0.06 * L, side > 0 ? h : -h * 1.9, 0.014 * L, h * 0.9);
-	}
-}
-
-class AsciiField {
-	constructor(canvas) {
-		this.canvas = canvas;
-		this.ctx = canvas.getContext('2d');
-		this.font = readAsciiFont(canvas);
-		this.ramp = makeRamp(canvas);
-
-		const data = canvas.dataset;
-		this.cellSize = Number(data.cellSize) || 14;
-		this.angle = ((Number(data.angle) || 0) * Math.PI) / 180;
-		this.positionX = data.x === undefined ? 0.8 : Number(data.x);
-		this.positionY = data.y === undefined ? 0.5 : Number(data.y);
-		this.size = Number(data.size) || 0.5;
-
-		// One pixel of this small canvas = one character on screen.
-		this.shapeCanvas = document.createElement('canvas');
-		this.shapeCtx = this.shapeCanvas.getContext('2d', { willReadFrequently: true });
-
-		this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		this.visible = true;
-		this.lastDraw = 0;
-		this.startTime = performance.now();
-
-		this.measure();
-		new ResizeObserver(() => { this.measure(); this.paint(0); }).observe(canvas);
-		new IntersectionObserver((entries) => { this.visible = entries[0].isIntersecting; }).observe(canvas);
-
-		this.paint(0);
-		if (!this.reducedMotion) requestAnimationFrame((now) => this.loop(now));
-	}
-
-	measure() {
-		this.width = Math.max(1, this.canvas.clientWidth);
-		this.height = Math.max(1, this.canvas.clientHeight);
-		this.pixelRatio = Math.min(2, window.devicePixelRatio || 1);
-		this.canvas.width = Math.round(this.width * this.pixelRatio);
-		this.canvas.height = Math.round(this.height * this.pixelRatio);
-		this.cellWidth = this.cellSize * CELL_WIDTH;
-		this.cellHeight = this.cellSize * CELL_HEIGHT;
-		this.cols = Math.ceil(this.width / this.cellWidth);
-		this.rows = Math.ceil(this.height / this.cellHeight);
-		this.cellAspect = this.cellHeight / this.cellWidth;
-		this.shapeCanvas.width = this.cols;
-		this.shapeCanvas.height = this.rows;
-	}
-
-	/** Draws the rocket at low resolution, one pixel per character. */
-	drawShape(seconds) {
-		const ctx = this.shapeCtx;
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		ctx.fillStyle = '#000';
-		ctx.fillRect(0, 0, this.cols, this.rows);
-
-		// Work in units of one character width, so shapes are not squashed by tall characters.
-		ctx.setTransform(1, 0, 0, 1 / this.cellAspect, 0, 0);
-		// Size the rocket to fit: no wider than data-size (a fraction of the canvas width), and no taller than the canvas allows.
-		const heightUnits = this.rows * this.cellAspect;
-		const heightPerLength = 0.95 * Math.abs(Math.sin(this.angle)) + 0.15; // how tall the rocket is, per unit of length
-		const length = Math.min(this.cols * this.size, (heightUnits * 0.9) / heightPerLength);
-		const bob = Math.sin(seconds * 0.9) * 0.02 * length;     // gentle hover, stays in one place
-		const sway = Math.sin(seconds * 0.6) * 0.03;              // tiny rocking
-		// Keep the nose inside the canvas, however the rocket is angled.
-		const noseReach = 0.5 * length * Math.abs(Math.cos(this.angle)) + 2;
-		const centerX = Math.min(this.positionX * this.cols, this.cols - noseReach);
-		ctx.translate(centerX, this.positionY * this.rows * this.cellAspect + bob);
-		ctx.rotate(this.angle + sway);
-		drawRocket(ctx, seconds, length);
-	}
-
-	paint(seconds) {
-		this.drawShape(seconds);
-		const pixels = this.shapeCtx.getImageData(0, 0, this.cols, this.rows).data;
-		const ctx = this.ctx;
-		ctx.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
-		ctx.clearRect(0, 0, this.width, this.height);
-		ctx.font = this.font.replace('{size}', this.cellSize);
-		ctx.textBaseline = 'top';
-		ctx.textAlign = 'center';
-
-		for (let row = 0; row < this.rows; row++) {
-			for (let col = 0; col < this.cols; col++) {
-				const value = pixels[(row * this.cols + col) * 4] / 255;
-				if (value < 0.07) continue;
-
-				const shimmerStep = Math.floor(seconds * 3 + ((col * 31 + row * 17) % 4) * 0.25);
-				const tier = clamp(Math.ceil(value * 6), 1, GLYPH_TIERS.length - 1);
-				const glyphs = GLYPH_TIERS[tier];
-				const glyph = glyphs.charAt(Math.floor(hash(col + 5, row + 9, shimmerStep) * glyphs.length));
-
-				const [r, g, b] = rampColor(this.ramp, value * 0.95);
-				ctx.fillStyle = rgbString(r, g, b);
-				drawGlyph(ctx, glyph, col * this.cellWidth, row * this.cellHeight, this.cellWidth);
-			}
-		}
-	}
-
-	loop(now) {
-		requestAnimationFrame((t) => this.loop(t));
-		if (!this.visible || now - this.lastDraw < 1000 / 12) return;
-		this.lastDraw = now;
-		this.paint((now - this.startTime) / 1000);
-	}
-}
-
-// --- The page-wide trail ---------------------------------------------------------
-
-/**
- * A transparent canvas over the whole window. Wherever the pointer moves (except over the hero, which
- * draws its own trail on the video) it leaves the same tapering trail, drawn as characters.
- */
-class PageTrail {
-	constructor(canvas) {
-		this.canvas = canvas;
-		this.ctx = canvas.getContext('2d');
-		this.font = readAsciiFont(canvas);
-		this.ramp = makeRamp(canvas);
-		this.cellSize = Number(canvas.dataset.cellSize) || 14;
-		this.trail = new CursorTrail(Number(canvas.dataset.trailRadius) || 12);
-		this.hero = document.querySelector('.hero');
-		this.lastDraw = 0;
-		this.cleared = true;
-
-		this.measure();
-		window.addEventListener('resize', () => this.measure());
-		window.addEventListener('pointermove', (event) => this.onMove(event), { passive: true });
-		document.addEventListener('pointerleave', () => this.trail.leave());
-		requestAnimationFrame((now) => this.loop(now));
-	}
-
-	measure() {
-		this.width = window.innerWidth;
-		this.height = window.innerHeight;
-		this.pixelRatio = Math.min(2, window.devicePixelRatio || 1);
-		this.canvas.width = Math.round(this.width * this.pixelRatio);
-		this.canvas.height = Math.round(this.height * this.pixelRatio);
-		this.cellWidth = this.cellSize * CELL_WIDTH;
-		this.cellHeight = this.cellSize * CELL_HEIGHT;
-		this.cols = Math.ceil(this.width / this.cellWidth);
-		this.rows = Math.ceil(this.height / this.cellHeight);
-		this.trail.resize(this.cols, this.rows, this.cellWidth, this.cellHeight);
-	}
-
-	onMove(event) {
-		const overHero = this.hero && event.clientY < this.hero.getBoundingClientRect().bottom;
-		if (overHero) this.trail.leave();
-		else this.trail.move(event.clientX, event.clientY, performance.now());
-	}
-
-	paint() {
-		const ctx = this.ctx;
-		ctx.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
-		ctx.clearRect(0, 0, this.width, this.height);
-		ctx.font = this.font.replace('{size}', this.cellSize);
-		ctx.textBaseline = 'top';
-		ctx.textAlign = 'center';
-
-		const seconds = performance.now() / 1000;
-		for (let row = 0; row < this.rows; row++) {
-			for (let col = 0; col < this.cols; col++) {
-				const glow = this.trail.glow[row * this.cols + col];
-				if (glow < 0.06) continue;
-
-				const shimmerStep = Math.floor(seconds * 6 + ((col * 31 + row * 17) % 4) * 0.25);
-				const tier = clamp(Math.ceil(glow * 6), 1, GLYPH_TIERS.length - 1);
-				const glyphs = GLYPH_TIERS[tier];
-				const glyph = glyphs.charAt(Math.floor(hash(col + 5, row + 9, shimmerStep) * glyphs.length));
-
-				// Kept faint so it never fights with text that is drawn on top of it.
-				const [r, g, b] = rampColor(this.ramp, 0.3 + glow * 0.4);
-				ctx.globalAlpha = Math.min(0.4, glow * 0.55);
-				ctx.fillStyle = rgbString(r, g, b);
-				drawGlyph(ctx, glyph, col * this.cellWidth, row * this.cellHeight, this.cellWidth);
-			}
-		}
-		ctx.globalAlpha = 1;
-	}
-
-	loop(now) {
-		requestAnimationFrame((t) => this.loop(t));
-		if (now - this.lastDraw < 1000 / FRAMES_PER_SECOND) return;
-		this.lastDraw = now;
-
-		this.trail.update(performance.now());
-		if (this.trail.visible) {
-			this.paint();
-			this.cleared = false;
-		} else if (!this.cleared) {
-			this.ctx.clearRect(0, 0, this.width, this.height);
-			this.cleared = true;
-		}
-	}
-}
-
 // --- Start -----------------------------------------------------------------------
 
 // Wait for the font so character sizes are measured correctly.
 const start = () => {
 	document.querySelectorAll('canvas[data-video]').forEach((canvas) => new AsciiHero(canvas));
-	document.querySelectorAll('canvas[data-shape]').forEach((canvas) => new AsciiField(canvas));
-	if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-		document.querySelectorAll('canvas[data-page-trail]').forEach((canvas) => new PageTrail(canvas));
-	}
 };
 if (document.fonts && document.fonts.ready) {
 	document.fonts.ready.then(start, start);
