@@ -1,0 +1,1175 @@
+/* Warwick Aerospace: Launch 4 Change. One-page site. */
+
+:root {
+	--navy: #0B1F4D;
+	--royal: #1F4FD1;
+	--electric: #2F6BFF;
+	--sky: #8DB8FF;
+	--bg: #05080F;
+	--ink: #E9EEF8;
+	--soft: #A9BDE8;
+	--muted: #8493B3;
+	--line: rgba(255, 255, 255, 0.1);
+
+	--gutter: clamp(20px, 5vw, 80px);
+	--ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+	/* each section starts on the colour the one above it ends on */
+	--c0: #05080F;
+	--c1: #0A1A45;
+	--c2: #0F2E73;
+	--c2b: #0D2760;
+	--c2c: #0B2258;
+	--c3: #0A1F52;
+	--c4: #0C2663;
+	--c5: #071433;
+
+	/* ascii.js reads these three for the dot colours */
+	--accent: #8DB8FF;
+	--purple-700: #0E2F73;
+	--purple-500: #2F6BFF;
+	--mono: 'Space Mono', ui-monospace, monospace;
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--ink);
+	font: 500 18px/1.6 'Plus Jakarta Sans', system-ui, sans-serif;
+	overflow-x: hidden;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+h1, h2, h3, p {
+	margin: 0;
+}
+
+section {
+	position: relative;
+	padding: 130px var(--gutter);
+}
+
+.big {
+	font-size: clamp(44px, 8.4vw, 140px);
+	line-height: 0.95;
+	letter-spacing: -0.05em;
+	font-weight: 800;
+}
+
+/* the hidden video that ascii.js reads frames from */
+.ascii-video {
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: -1;
+	width: 2px;
+	height: 2px;
+	opacity: 0.01;
+	pointer-events: none;
+}
+
+
+/* Scroll reveals (site.js adds .in) */
+
+.reveal {
+	opacity: 0;
+	transform: translateY(40px);
+	transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+
+.reveal.in {
+	opacity: 1;
+	transform: none;
+}
+
+.reveal[data-delay="1"] { transition-delay: 0.1s; }
+.reveal[data-delay="2"] { transition-delay: 0.2s; }
+.reveal[data-delay="3"] { transition-delay: 0.3s; }
+.reveal[data-delay="4"] { transition-delay: 0.4s; }
+.reveal[data-delay="5"] { transition-delay: 0.5s; }
+
+/* headline lines slide up out of a mask */
+.line {
+	display: block;
+	overflow: hidden;
+	padding-bottom: 0.08em;
+}
+
+.line > span {
+	display: block;
+	transform: translateY(110%);
+	transition: transform 1.1s var(--ease);
+}
+
+.in .line > span {
+	transform: none;
+}
+
+.line:nth-child(2) > span {
+	transition-delay: 0.12s;
+}
+
+
+/* Buttons */
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	padding: 18px 32px;
+	border-radius: 999px;
+	font-weight: 700;
+	font-size: 16px;
+	transition: transform 0.4s var(--ease), background 0.3s, color 0.3s;
+}
+
+.btn:hover {
+	transform: scale(1.05);
+}
+
+.btn--white {
+	background: #fff;
+	color: var(--navy);
+}
+
+.btn--ghost {
+	border: 1.5px solid rgba(255, 255, 255, 0.4);
+}
+
+.btn--ghost:hover {
+	background: #fff;
+	color: var(--navy);
+}
+
+
+/* Floating header */
+
+header {
+	position: fixed;
+	top: 20px;
+	left: 50%;
+	z-index: 20;
+	display: flex;
+	align-items: center;
+	gap: 28px;
+	padding: 10px 12px 10px 22px;
+	border-radius: 999px;
+	isolation: isolate;
+	background: rgba(255, 255, 255, 0.07);
+	backdrop-filter: blur(16px) saturate(130%);
+	-webkit-backdrop-filter: blur(16px) saturate(130%);
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	box-shadow: 0 10px 30px rgba(2, 8, 28, 0.35);
+	transform: translateX(-50%);
+	transition: transform 0.6s var(--ease), background 0.4s;
+}
+
+header:hover {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+header.hide {
+	transform: translate(-50%, -160%);
+}
+
+header img {
+	display: block;
+	height: 40px;
+}
+
+header nav {
+	display: flex;
+	gap: 24px;
+	font-size: 15px;
+}
+
+header nav a {
+	padding: 8px 14px;
+	border-radius: 999px;
+	opacity: 0.75;
+	transition: opacity 0.2s, background 0.3s;
+}
+
+header nav a:hover {
+	opacity: 1;
+	background: rgba(255, 255, 255, 0.14);
+}
+
+header .btn {
+	padding: 12px 22px;
+	font-size: 14px;
+	white-space: nowrap;
+}
+
+header .btn--white {
+	background: rgba(255, 255, 255, 0.92);
+	box-shadow: 0 4px 14px rgba(2, 8, 28, 0.3), inset 0 1px 0 #fff;
+}
+
+/* no zoom on the Join button inside the pill */
+header .btn:hover {
+	transform: none;
+}
+
+.menu-btn {
+	display: none;
+}
+
+
+/* Hero */
+
+.hero {
+	display: flex;
+	flex-direction: column;
+	justify-content: end;
+	min-height: 100svh;
+	padding-bottom: 80px;
+	overflow: hidden;
+	background: var(--bg);
+}
+
+.hero canvas {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+/* darkens the footage behind the text */
+.hero::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	background: linear-gradient(0deg, var(--bg) 0%, rgba(5, 8, 15, 0.55) 45%, rgba(5, 8, 15, 0.15) 100%);
+}
+
+.hero-copy {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+}
+
+.hero-title {
+	margin-bottom: 8px;
+	font-size: clamp(54px, 10.5vw, 190px);
+	line-height: 0.92;
+	letter-spacing: -0.06em;
+}
+
+.hero-title span {
+	color: #fff;
+}
+
+.hero-title .line:first-child > span {
+	font-weight: 300;
+}
+
+.hero-title .line:last-child > span {
+	font-weight: 800;
+}
+
+/* extra room so the slide-up mask doesn't cut off the tail of the g */
+.hero-title .line {
+	padding-bottom: 0.2em;
+	margin-bottom: -0.2em;
+}
+
+.hero p {
+	max-width: 38ch;
+	margin: 24px 0 36px;
+	font-size: 20px;
+	color: var(--muted);
+}
+
+.actions {
+	display: flex;
+	gap: 14px;
+	flex-wrap: wrap;
+}
+
+
+/* Ticker */
+
+.ticker {
+	overflow: hidden;
+	padding-block: 28px 12px;
+	color: rgba(169, 189, 232, 0.6);
+	white-space: nowrap;
+}
+
+.ticker .track {
+	display: flex;
+	width: max-content;
+	animation: slide var(--ticker-duration, 30s) linear infinite;
+}
+
+.ticker .group {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	gap: 44px;
+	padding-right: 44px;
+	font-size: clamp(22px, 2.6vw, 38px);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+.ticker i {
+	color: var(--sky);
+	opacity: 0.7;
+	font-size: 0.6em;
+	font-style: normal;
+}
+
+@keyframes slide {
+	to { transform: translateX(calc(-1 * var(--ticker-shift, 50%))); }
+}
+
+
+/* Mission */
+
+.mission {
+	background: linear-gradient(180deg, var(--c0), var(--c1));
+}
+
+.mission .big {
+	max-width: 14em;
+	font-size: clamp(36px, 6vw, 96px);
+}
+
+.mission p {
+	max-width: 54ch;
+	margin-top: 40px;
+	color: var(--soft);
+}
+
+
+/* Four teams. Clicking one folds the others away (see site.js). */
+
+.divisions {
+	background: linear-gradient(180deg, var(--c1), var(--c2));
+}
+
+.divisions .big {
+	max-width: 13em;
+}
+
+.list {
+	position: relative;
+	isolation: isolate;
+	display: flex;
+	flex-direction: column;
+	margin-top: 56px;
+	border-top: 1px solid rgba(255, 255, 255, 0.16);
+	transition: height 0.4s var(--ease);
+}
+
+/* the highlight block behind the open team */
+.list::before {
+	content: "";
+	position: absolute;
+	inset: -1px 0 0 0;
+	z-index: -1;
+	border-radius: 16px;
+	background: linear-gradient(90deg, var(--royal), var(--sky));
+	opacity: 0;
+	transition: opacity 0.3s var(--ease);
+	pointer-events: none;
+}
+
+.item {
+	position: relative;
+	display: grid;
+	grid-template-columns: 1fr 40px;
+	grid-template-areas: "name arrow";
+	align-items: center;
+	column-gap: 24px;
+	flex-shrink: 0;
+	padding: 30px 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+	overflow: hidden;
+	cursor: pointer;
+	transition: opacity 0.3s var(--ease), transform 0.5s var(--ease), padding 0.3s var(--ease), border-color 0.2s;
+}
+
+/* hover sweep */
+.item::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	background: linear-gradient(90deg, var(--royal), var(--sky));
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 0.35s var(--ease);
+}
+
+.item > * {
+	position: relative;
+	z-index: 1;
+}
+
+.item:hover {
+	padding-inline: 24px;
+}
+
+.item:hover::before {
+	transform: scaleX(1);
+}
+
+.item h3 {
+	grid-area: name;
+	font-size: clamp(34px, 5vw, 76px);
+	font-weight: 800;
+	letter-spacing: -0.05em;
+	line-height: 1;
+}
+
+.item:hover h3 {
+	color: #fff;
+}
+
+.item .arrow {
+	grid-area: arrow;
+	align-self: start;
+	margin-top: 0.4em;
+	font-size: 24px;
+	transition: transform 0.5s var(--ease);
+}
+
+.item:hover .arrow {
+	transform: translateX(8px);
+	color: #fff;
+}
+
+.detail {
+	position: absolute;
+	left: 0;
+	right: 0;
+	max-width: calc(48ch + 48px);
+	padding: 28px 24px 0;
+	font-size: clamp(22px, 2.3vw, 32px);
+	line-height: 1.45;
+	color: #fff;
+	opacity: 0;
+	transform: translateY(16px);
+	transition: opacity 0.35s 0.15s, transform 0.45s 0.15s var(--ease);
+}
+
+.detail.show {
+	opacity: 1;
+	transform: none;
+}
+
+.detail:not(.show) {
+	transition-delay: 0s;
+}
+
+/* open state */
+
+.list.open {
+	border-top-color: transparent;
+}
+
+.list.open::before {
+	opacity: 1;
+}
+
+.list.open .item {
+	border-color: transparent;
+}
+
+.list.open .item:not(.active) {
+	opacity: 0;
+	pointer-events: none;
+	transition-duration: 0.12s, 0.5s, 0.3s, 0.2s;
+}
+
+.item.active {
+	order: -1;
+	padding-inline: 24px;
+}
+
+/* no hover effects on the open row */
+.list.open .item.active::before {
+	display: none;
+}
+
+.list.open .item.active:hover h3,
+.list.open .item.active:hover .arrow {
+	color: inherit;
+	transform: none;
+}
+
+/* the bottom two teams drop to the bottom, with their paragraph above */
+.list.reverse {
+	justify-content: flex-end;
+}
+
+.list.reverse .item.active {
+	order: 99;
+}
+
+.detail.above {
+	padding: 0 24px 28px;
+}
+
+/* names fade back in after the open row has moved */
+.list.closing .item {
+	transition-delay: 0.3s, 0s, 0s, 0s;
+}
+
+/* ignore the mouse while rows are moving */
+.list.busy {
+	pointer-events: none;
+}
+
+
+/* Flight record */
+
+.record {
+	background: linear-gradient(180deg, var(--c2), var(--c2b));
+}
+
+.rec-chart {
+	display: flex;
+	align-items: flex-end;
+	gap: clamp(12px, 1.8vw, 24px);
+	height: 440px;
+	margin-top: 64px;
+}
+
+.rec-col {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	height: 100%;
+}
+
+.rec-col--target {
+	flex: 1.5;
+}
+
+.rec-value {
+	margin-bottom: 14px;
+	font-size: clamp(22px, 2.8vw, 38px);
+	font-weight: 800;
+	letter-spacing: -0.04em;
+	white-space: nowrap;
+}
+
+.rec-col--target .rec-value {
+	font-size: clamp(32px, 4.2vw, 64px);
+	color: var(--sky);
+}
+
+.rec-bar {
+	height: var(--h);
+	border-radius: 14px 14px 0 0;
+	background: linear-gradient(180deg, var(--sky), var(--royal));
+	transform: scaleY(0);
+	transform-origin: bottom;
+	transition: transform 1.5s var(--ease);
+}
+
+.rec-col--target .rec-bar {
+	background: linear-gradient(180deg, #fff, var(--sky) 35%, var(--royal));
+	box-shadow: 0 0 60px rgba(141, 184, 255, 0.35);
+}
+
+.rec-col.in .rec-bar,
+.rec-col.in .rec-ref {
+	transform: none;
+}
+
+.rec-name {
+	margin-top: 16px;
+	font-weight: 700;
+}
+
+.rec-year {
+	color: var(--soft);
+	font-size: 15px;
+}
+
+/* landmarks beside the bars, drawn at the same scale (60px per km) */
+
+.rec-divider {
+	flex: none;
+	align-self: stretch;
+	width: 0;
+	margin-inline: 4px;
+	border-left: 1px dashed rgba(169, 189, 232, 0.35);
+}
+
+.rec-col--ref {
+	flex: 0 0 auto;
+}
+
+.rec-col--ref .rec-value {
+	font-size: clamp(18px, 2vw, 26px);
+	color: var(--soft);
+}
+
+.rec-ref {
+	flex: none;
+	align-self: center;
+	height: var(--h);
+	aspect-ratio: var(--ar);
+	background: var(--soft);
+	-webkit-mask: var(--ref) center / 100% 100% no-repeat;
+	mask: var(--ref) center / 100% 100% no-repeat;
+	transform: scaleY(0);
+	transform-origin: bottom;
+	transition: transform 1.5s var(--ease);
+}
+
+.rec-ref--eiffel { --ref: url(../assets/landmarks/eiffel.svg); }
+.rec-ref--ben { --ref: url(../assets/landmarks/ben-nevis.svg); }
+.rec-ref--blanc { --ref: url(../assets/landmarks/mont-blanc.svg); }
+
+
+/* Speed comparison */
+
+.speed {
+	background: linear-gradient(180deg, var(--c2b), var(--c2c));
+}
+
+.spd-list {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(20px, 3vw, 36px);
+	margin-top: 64px;
+}
+
+.spd-row {
+	display: grid;
+	grid-template-columns: clamp(88px, 14vw, 190px) 1fr;
+	gap: clamp(16px, 3vw, 40px);
+	align-items: center;
+}
+
+/* the drawings are masks, so they take their colour from here */
+.spd-icon {
+	width: 100%;
+	height: clamp(52px, 7vw, 100px);
+	background: var(--soft);
+	-webkit-mask: var(--icon) center / contain no-repeat;
+	mask: var(--icon) center / contain no-repeat;
+}
+
+.spd-icon--sprinter { --icon: url(../assets/icons/sprinter.png); }
+.spd-icon--cheetah { --icon: url(../assets/icons/cheetah.png); }
+.spd-icon--f1 { --icon: url(../assets/icons/f1.png); }
+.spd-icon--harrier { --icon: url(../assets/icons/harrier.png); }
+.spd-icon--rocket { --icon: url(../assets/icons/rocket.png); }
+
+.spd-name {
+	margin-bottom: 10px;
+	font-weight: 700;
+}
+
+.spd-track {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.spd-bar {
+	flex: none;
+	width: calc(var(--w) * 0.8);
+	height: clamp(28px, 4vw, 48px);
+	border-radius: 0 12px 12px 0;
+	background: linear-gradient(90deg, var(--royal), var(--sky));
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 1.4s var(--ease);
+}
+
+.spd-row.in .spd-bar {
+	transform: none;
+}
+
+.spd-value {
+	font-size: clamp(20px, 2.6vw, 34px);
+	font-weight: 800;
+	letter-spacing: -0.03em;
+	white-space: nowrap;
+}
+
+.spd-row--target .spd-name,
+.spd-row--target .spd-value {
+	color: var(--sky);
+}
+
+.spd-row--target .spd-bar {
+	background: linear-gradient(90deg, var(--royal), var(--sky) 60%, #fff);
+	box-shadow: 0 0 50px rgba(141, 184, 255, 0.35);
+}
+
+
+/* Launch 4 Change numbers */
+
+.l4c {
+	background: linear-gradient(180deg, var(--c2c), var(--c3));
+}
+
+.nums {
+	display: grid;
+	/* the middle column holds 15,000 */
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr) minmax(0, 1fr);
+	gap: 24px;
+	margin-top: 72px;
+}
+
+.num {
+	padding-top: 24px;
+	border-top: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.num b {
+	display: block;
+	font-size: clamp(64px, 11vw, 190px);
+	line-height: 0.9;
+	letter-spacing: -0.06em;
+	font-weight: 800;
+	white-space: nowrap;
+	background: linear-gradient(180deg, #fff, var(--sky) 90%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+.num span {
+	display: block;
+	margin-top: 14px;
+	color: var(--soft);
+	font-size: 12px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.credits {
+	margin-top: 56px;
+	color: var(--soft);
+}
+
+
+/* Team */
+
+.team {
+	padding-right: 0;
+	background: linear-gradient(180deg, var(--c3), var(--c4));
+}
+
+.scroller {
+	display: flex;
+	gap: 22px;
+	margin-top: 56px;
+	padding-right: var(--gutter);
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: none;
+}
+
+.scroller::-webkit-scrollbar {
+	display: none;
+}
+
+.person {
+	flex: 0 0 min(300px, 74vw);
+	scroll-snap-align: start;
+}
+
+.person .photo {
+	aspect-ratio: 3 / 4;
+	border-radius: 32px;
+	background: linear-gradient(160deg, #2A55C8, #0E2A66);
+	border: 1px solid rgba(255, 255, 255, 0.16);
+	transition: border-color 0.3s;
+}
+
+.person:hover .photo {
+	border-color: rgba(255, 255, 255, 0.4);
+}
+
+.person h3 {
+	margin-top: 18px;
+	font-size: 20px;
+	font-weight: 800;
+}
+
+.person p {
+	color: var(--soft);
+	font-size: 12px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+
+/* Sponsors */
+
+.sponsors {
+	background: var(--c4);
+}
+
+.sp-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: clamp(16px, 2.4vw, 32px);
+	margin-top: 56px;
+}
+
+.sp-card {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: clamp(24px, 3vw, 44px);
+	border-radius: 20px;
+	background: rgba(141, 184, 255, 0.07);
+	border: 1px solid rgba(141, 184, 255, 0.2);
+	transition: opacity 0.9s var(--ease), transform 0.5s var(--ease), background 0.4s, border-color 0.4s, box-shadow 0.5s var(--ease);
+}
+
+.sp-card:hover {
+	transform: translateY(-8px);
+	background: rgba(141, 184, 255, 0.12);
+	border-color: rgba(141, 184, 255, 0.45);
+	box-shadow: 0 24px 60px rgba(2, 8, 28, 0.35);
+}
+
+.sp-logo {
+	width: 100%;
+	max-width: 300px;
+	height: 64px;
+	margin-bottom: 28px;
+	background: #fff;
+	-webkit-mask: var(--logo) left center / contain no-repeat;
+	mask: var(--logo) left center / contain no-repeat;
+	transform-origin: left center;
+	transition: transform 0.5s var(--ease);
+}
+
+.sp-card:hover .sp-logo {
+	transform: scale(1.04);
+}
+
+.sp-logo--aria { --logo: url(../assets/sponsors/aria.svg); }
+.sp-logo--warwick { --logo: url(../assets/sponsors/warwick.svg); }
+
+.sp-blurb {
+	max-width: 46ch;
+	color: var(--soft);
+	font-size: 17px;
+	line-height: 1.6;
+}
+
+
+/* Join */
+
+.cta {
+	display: grid;
+	place-items: center;
+	min-height: 80svh;
+	text-align: center;
+	background:
+		radial-gradient(800px 440px at 50% 62%, rgba(141, 184, 255, 0.45), transparent 70%),
+		linear-gradient(180deg, var(--c4), var(--royal) 62%, var(--c5));
+}
+
+.cta .big {
+	margin-bottom: 48px;
+	font-size: clamp(54px, 12vw, 200px);
+}
+
+.cta .actions {
+	justify-content: center;
+}
+
+.cta .btn--ghost {
+	border-color: rgba(255, 255, 255, 0.5);
+}
+
+
+footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 24px;
+	padding: 36px var(--gutter);
+	background: var(--c5);
+	color: var(--muted);
+	font-size: 15px;
+}
+
+footer img {
+	display: block;
+	height: 54px;
+}
+
+footer span {
+	font-size: 12px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+
+/* Responsive */
+
+/* the record chart has eight columns, so on mid-size screens it scrolls sideways */
+@media (min-width: 721px) and (max-width: 1180px) {
+	.rec-chart {
+		overflow-x: auto;
+		overflow-y: hidden;
+		padding-bottom: 8px;
+		scrollbar-width: thin;
+		scrollbar-color: rgba(169, 189, 232, 0.5) transparent;
+	}
+
+	.rec-col:not(.rec-col--ref) {
+		flex: 0 0 120px;
+	}
+
+	.rec-col--target {
+		flex-basis: 170px;
+	}
+
+	.rec-col--ref {
+		padding-right: 8px;
+	}
+}
+
+@media (max-width: 900px) {
+	.nums {
+		grid-template-columns: 1fr;
+	}
+
+	/* the nav links move into a menu under the pill */
+	header {
+		gap: 14px;
+		padding: 8px 8px 8px 18px;
+	}
+
+	.menu-btn {
+		display: grid;
+		place-content: center;
+		gap: 6px;
+		width: 44px;
+		height: 44px;
+		border: 0;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.1);
+		cursor: pointer;
+	}
+
+	.menu-btn span {
+		display: block;
+		width: 18px;
+		height: 2px;
+		border-radius: 2px;
+		background: #fff;
+		transition: transform 0.3s var(--ease);
+	}
+
+	header.open .menu-btn span:first-child {
+		transform: translateY(4px) rotate(45deg);
+	}
+
+	header.open .menu-btn span:last-child {
+		transform: translateY(-4px) rotate(-45deg);
+	}
+
+	header nav {
+		display: none;
+		position: absolute;
+		top: calc(100% + 10px);
+		left: 0;
+		right: 0;
+		flex-direction: column;
+		gap: 0;
+		padding: 8px;
+		border-radius: 24px;
+		background: #08101E;
+		box-shadow: 0 20px 50px rgba(2, 8, 28, 0.6);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+	}
+
+	header.open nav {
+		display: flex;
+	}
+
+	header nav a {
+		padding: 14px 16px;
+		font-size: 18px;
+		opacity: 1;
+	}
+}
+
+@media (max-width: 720px) {
+	section {
+		padding-block: 88px;
+	}
+
+	.hero {
+		padding-block: 120px 56px;
+	}
+
+	.hero p {
+		font-size: 18px;
+	}
+
+	/* sized from the screen width so '15,000 feet.' stays on one line */
+	.hero-title {
+		font-size: calc((100vw - 40px) / 6.7);
+	}
+
+	.actions {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.actions .btn {
+		width: 100%;
+		justify-content: center;
+		text-align: center;
+	}
+
+	.ticker {
+		padding-block: 20px 4px;
+	}
+
+	.item {
+		padding: 24px 0;
+	}
+
+	.item h3 {
+		font-size: clamp(30px, 8.4vw, 44px);
+	}
+
+	/* the record chart scrolls sideways on phones */
+	.rec-chart {
+		height: 360px;
+		gap: 12px;
+		margin-top: 44px;
+		overflow-x: auto;
+		overflow-y: hidden;
+		padding-bottom: 8px;
+		scrollbar-width: thin;
+		scrollbar-color: rgba(169, 189, 232, 0.5) transparent;
+	}
+
+	.rec-col {
+		flex: 0 0 76px;
+	}
+
+	.rec-col--target {
+		flex-basis: 120px;
+	}
+
+	.rec-col--ref {
+		flex: 0 0 auto;
+	}
+
+	.rec-bar,
+	.rec-ref {
+		height: calc(var(--h) * 0.75);
+	}
+
+	.rec-value {
+		font-size: 20px;
+	}
+
+	.rec-col--target .rec-value {
+		font-size: 30px;
+	}
+
+	.rec-name {
+		margin-top: 12px;
+		font-size: 13px;
+	}
+
+	.rec-year {
+		font-size: 12px;
+	}
+
+	.spd-bar {
+		width: calc(var(--w) * 0.55);
+	}
+
+	.nums {
+		margin-top: 44px;
+	}
+
+	.num b {
+		font-size: clamp(72px, 24vw, 110px);
+	}
+
+	.person {
+		flex-basis: 76vw;
+	}
+
+	.sp-grid {
+		grid-template-columns: 1fr;
+		margin-top: 40px;
+	}
+}
+
+/* touch screens have no hover, so no sweep or inset on the rows */
+@media (hover: none) {
+	.item::before {
+		display: none;
+	}
+
+	.item:not(.active):hover {
+		padding-inline: 0;
+	}
+
+	.item:hover h3,
+	.item:hover .arrow {
+		color: inherit;
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	.reveal,
+	.line > span {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+
+	.rec-bar,
+	.rec-ref {
+		transform: none;
+		transition: none;
+	}
+
+	.ticker .track {
+		animation: none;
+	}
+
+	* {
+		transition: none !important;
+	}
+}
