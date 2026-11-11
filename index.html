@@ -3,26 +3,30 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#05080F">
 	<title>Warwick Aerospace: Launch 4 Change</title>
 	<meta name="description" content="Warwick Aerospace is building a rocket to reach 15,000 ft for Launch 4 Change.">
 	<link rel="icon" href="assets/logo-navy.png">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="css/site.css">
 </head>
 <body>
 
 <header id="bar">
-	<a href="#top"><img src="assets/logo-white.png" alt="Warwick Aerospace"></a>
+	<a class="brand" href="#top"><img src="assets/logo-white.png" alt="Warwick Aerospace" width="46" height="34"></a>
 	<nav id="menu" aria-label="Main">
-		<a href="#mission">Mission</a>
-		<a href="#record">Record</a>
-		<a href="#l4c">L4C</a>
-		<a href="#team">Team</a>
+		<a href="#mission"><span>Mission</span></a>
+		<a href="#disciplines"><span>Subteams</span></a>
+		<a href="#team"><span>People</span></a>
+		<a href="#outreach"><span>Outreach</span></a>
+		<a href="#sponsors"><span>Sponsors</span></a>
 	</nav>
-	<a class="btn btn--white" href="#join">Join us</a>
-	<button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+	<div class="bar-end">
+		<a class="btn btn--white" href="#join"><span>Join us</span></a>
+		<button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+	</div>
 </header>
 
 <main id="top">
@@ -36,22 +40,11 @@
 			</h1>
 			<p class="reveal" data-delay="1">L4CRocket is Warwick Aerospace's rocket for Launch 4 Change, a national competition for 12 universities, flying one climate payload in 2026/27.</p>
 			<div class="actions reveal" data-delay="2">
-				<a class="btn btn--white" href="#record">See the flight record →</a>
-				<a class="btn btn--ghost" href="#team">Meet the team</a>
+				<a class="btn btn--white" href="#disciplines">Our subteams →</a>
+				<a class="btn btn--ghost" href="#team">Meet the people</a>
 			</div>
 		</div>
 	</section>
-
-	<div class="ticker" aria-hidden="true">
-		<div class="track">
-			<div class="group">
-				<span>Airframe</span><i>•</i>
-				<span>Modelling &amp; Simulation</span><i>•</i>
-				<span>Climate Payload</span><i>•</i>
-				<span>Electric Vehicle Integration</span><i>•</i>
-			</div>
-		</div>
-	</div>
 
 	<section id="mission" class="mission">
 		<h2 class="big reveal" data-delay="1">Warwick builds rockets.</h2>
@@ -81,46 +74,46 @@
 			<span class="line"><span>every time.</span></span>
 		</h2>
 		<div class="rec-chart">
-			<div class="rec-col reveal">
+			<div class="rec-col reveal" style="--h:9px">
 				<p class="rec-value">153 m</p>
-				<div class="rec-bar" style="--h:9px"></div>
+				<div class="rec-bar"></div>
 				<p class="rec-name">MACH-25</p>
 				<p class="rec-year">2024/25</p>
 			</div>
-			<div class="rec-col reveal" data-delay="1">
+			<div class="rec-col reveal" style="--h:32px" data-delay="1">
 				<p class="rec-value">540 m</p>
-				<div class="rec-bar" style="--h:32px"></div>
+				<div class="rec-bar"></div>
 				<p class="rec-name">NRC</p>
 				<p class="rec-year">2024/25</p>
 			</div>
-			<div class="rec-col reveal" data-delay="2">
+			<div class="rec-col reveal" style="--h:150px" data-delay="2">
 				<p class="rec-value">2.5 km</p>
-				<div class="rec-bar" style="--h:150px"></div>
+				<div class="rec-bar"></div>
 				<p class="rec-name">MACH-26</p>
 				<p class="rec-year">2025/26</p>
 			</div>
-			<div class="rec-col rec-col--target reveal" data-delay="3">
+			<div class="rec-col rec-col--target reveal" style="--h:274px" data-delay="3">
 				<p class="rec-value">4.6 km</p>
-				<div class="rec-bar" style="--h:274px"></div>
+				<div class="rec-bar"></div>
 				<p class="rec-name">L4CRocket</p>
 				<p class="rec-year">2026/27 · Target</p>
 			</div>
 			<div class="rec-divider" aria-hidden="true"></div>
-			<div class="rec-col rec-col--ref reveal" data-delay="1">
+			<div class="rec-col rec-col--ref reveal" style="--h:20px" data-delay="1">
 				<p class="rec-value">330 m</p>
-				<div class="rec-ref rec-ref--eiffel" style="--h:20px;--ar:0.383" aria-hidden="true"></div>
+				<div class="rec-ref rec-ref--eiffel" style="--ar:0.383" aria-hidden="true"></div>
 				<p class="rec-name">Eiffel Tower</p>
 				<p class="rec-year">For scale</p>
 			</div>
-			<div class="rec-col rec-col--ref reveal" data-delay="2">
+			<div class="rec-col rec-col--ref reveal" style="--h:81px" data-delay="2">
 				<p class="rec-value">1,345 m</p>
-				<div class="rec-ref rec-ref--ben" style="--h:81px;--ar:2.28" aria-hidden="true"></div>
+				<div class="rec-ref rec-ref--ben" style="--ar:2.28" aria-hidden="true"></div>
 				<p class="rec-name">Ben Nevis</p>
 				<p class="rec-year">For scale</p>
 			</div>
-			<div class="rec-col rec-col--ref reveal" data-delay="3">
+			<div class="rec-col rec-col--ref reveal" style="--h:288px" data-delay="3">
 				<p class="rec-value">4,806 m</p>
-				<div class="rec-ref rec-ref--blanc" style="--h:288px;--ar:1.04" aria-hidden="true"></div>
+				<div class="rec-ref rec-ref--blanc" style="--ar:1.04" aria-hidden="true"></div>
 				<p class="rec-name">Mont Blanc</p>
 				<p class="rec-year">For scale</p>
 			</div>
@@ -193,6 +186,7 @@
 
 	<section id="l4c" class="l4c">
 		<h2 class="big reveal">Launch 4<br>Change.</h2>
+		<p class="l4c-blurb reveal">Launch 4 Change is an outreach and innovation programme funded by the Advanced Research + Invention Agency (ARIA). It supports university rocketry societies in two ways: helping them design and launch climate-monitoring payloads, which are instruments that collect data in the atmosphere, and helping them mentor young people taking part in the UK Rocketry Challenge (UKROC). The programme broadens participation and helps create the next generation of scientists, engineers and climate leaders.</p>
 		<div class="nums">
 			<div class="num reveal"><b>12</b><span>Universities</span></div>
 			<div class="num reveal" data-delay="1"><b>15,000</b><span>Ceiling (feet)</span></div>
@@ -206,7 +200,7 @@
 		<div class="scroller">
 			<article class="person reveal">
 				<button class="person-tile" type="button" aria-expanded="false" aria-controls="bio-matteo">
-					<span class="photo"><img src="assets/team/matteo-furbatto.jpg" alt="Matteo Furbatto" width="400" height="400"></span>
+					<span class="photo"><img src="assets/team/matteo-furbatto.jpg" alt="Matteo Furbatto" width="600" height="600" loading="lazy" decoding="async"></span>
 					<span class="person-name">Matteo Furbatto</span>
 					<span class="person-role">Team Lead</span>
 				</button>
@@ -223,7 +217,7 @@
 			</article>
 			<article class="person reveal" data-delay="1">
 				<button class="person-tile" type="button" aria-expanded="false" aria-controls="bio-sohan">
-					<span class="photo"><img src="assets/team/sohan-pillai.jpg" alt="Sohan Sharad Pillai" width="800" height="1067"></span>
+					<span class="photo"><img src="assets/team/sohan-pillai.jpg" alt="Sohan Sharad Pillai" width="600" height="800" loading="lazy" decoding="async"></span>
 					<span class="person-name">Sohan Sharad Pillai</span>
 					<span class="person-role">Embedded Systems Lead</span>
 				</button>
@@ -304,19 +298,21 @@
 
 	<section id="sponsors" class="sponsors">
 		<h2 class="big reveal"><span class="line"><span>Backed by.</span></span></h2>
-		<div class="sp-grid">
-			<a class="sp-card reveal" href="https://www.aria.org.uk/" target="_blank" rel="noopener">
-				<div class="sp-logo sp-logo--aria" role="img" aria-label="ARIA, Advanced Research + Invention Agency"></div>
-				<p class="sp-blurb">From climate change to AI, society faces challenges and opportunities that can be uniquely addressed by science + technology. Created by an Act of Parliament, and sponsored by the Department for Business, Innovation, Science and Trade, ARIA funds breakthrough R&amp;D in underexplored areas to catalyse new paths to prosperity for the UK and the world. We empower scientists and engineers to pursue research that is too speculative, too hard, or too interdisciplinary to pursue elsewhere.</p>
-			</a>
-			<a class="sp-card reveal" data-delay="1" href="https://warwick.ac.uk/" target="_blank" rel="noopener">
-				<div class="sp-logo sp-logo--warwick" role="img" aria-label="University of Warwick"></div>
-				<p class="sp-blurb">Warwick is one of the UK&rsquo;s leading universities, with an acknowledged reputation for excellence in research and teaching, for innovation, and for links with business and industry. We&rsquo;re a world-leading university with the highest academic and research standards. But we&rsquo;re not letting the story end there. That&rsquo;s because we&rsquo;re a place of possibility, always looking for new ways to make things happen. We drive innovation through our interdisciplinary collaboration, community engagement and unwavering commitment to solving the world&rsquo;s most pressing challenges.</p>
-			</a>
-		</div>
-		<div class="sp-logos reveal">
-			<a class="sp-mini sp-mini--go" href="https://springs.aero/" target="_blank" rel="noopener" role="img" aria-label="G&amp;O Springs"></a>
-			<a class="sp-mini sp-mini--vectis" href="https://www.vectisrecruit.com/" target="_blank" rel="noopener" role="img" aria-label="Vectis Recruitment"></a>
+		<div class="sp-panel reveal">
+			<div class="sp-grid">
+				<a class="sp-card" href="https://www.aria.org.uk/" target="_blank" rel="noopener">
+					<div class="sp-logo sp-logo--aria" role="img" aria-label="ARIA, Advanced Research + Invention Agency"></div>
+					<p class="sp-blurb">From climate change to AI, society faces challenges and opportunities that can be uniquely addressed by science + technology. Created by an Act of Parliament, and sponsored by the Department for Business, Innovation, Science and Trade, ARIA funds breakthrough R&amp;D in underexplored areas to catalyse new paths to prosperity for the UK and the world. We empower scientists and engineers to pursue research that is too speculative, too hard, or too interdisciplinary to pursue elsewhere.</p>
+				</a>
+				<a class="sp-card" href="https://warwick.ac.uk/" target="_blank" rel="noopener">
+					<div class="sp-logo sp-logo--warwick" role="img" aria-label="University of Warwick"></div>
+					<p class="sp-blurb">Warwick is one of the UK&rsquo;s leading universities, with an acknowledged reputation for excellence in research and teaching, for innovation, and for links with business and industry. We&rsquo;re a world-leading university with the highest academic and research standards. But we&rsquo;re not letting the story end there. That&rsquo;s because we&rsquo;re a place of possibility, always looking for new ways to make things happen. We drive innovation through our interdisciplinary collaboration, community engagement and unwavering commitment to solving the world&rsquo;s most pressing challenges.</p>
+				</a>
+			</div>
+			<div class="sp-logos">
+				<a class="sp-mini sp-mini--go" href="https://springs.aero/" target="_blank" rel="noopener" role="img" aria-label="G&amp;O Springs"></a>
+				<a class="sp-mini sp-mini--vectis" href="https://www.vectisrecruit.com/" target="_blank" rel="noopener" role="img" aria-label="Vectis Recruitment"></a>
+			</div>
 		</div>
 	</section>
 
@@ -333,7 +329,7 @@
 </main>
 
 <footer>
-	<img src="assets/logo-white.png" alt="Warwick Aerospace">
+	<img src="assets/logo-white.png" alt="Warwick Aerospace" width="73" height="54" loading="lazy" decoding="async">
 	<span>© 2026 Warwick Aerospace | University of Warwick</span>
 </footer>
 

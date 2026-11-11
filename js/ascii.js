@@ -294,7 +294,7 @@ class AsciiHero {
 	measure() {
 		this.width = Math.max(1, this.canvas.clientWidth);
 		this.height = Math.max(1, this.canvas.clientHeight);
-		this.pixelRatio = Math.min(2, window.devicePixelRatio || 1);
+		this.pixelRatio = Math.min(1.5, window.devicePixelRatio || 1);   // above 1.5 the dots get no sharper, but cost more to fill
 		this.canvas.width = Math.round(this.width * this.pixelRatio);
 		this.canvas.height = Math.round(this.height * this.pixelRatio);
 
@@ -419,7 +419,12 @@ class AsciiHero {
 		}).observe(this.canvas);
 
 		// Pause when scrolled out of view.
-		new IntersectionObserver((entries) => { this.visible = entries[0].isIntersecting; }).observe(this.canvas);
+		new IntersectionObserver((entries) => {
+			this.visible = entries[0].isIntersecting;
+			// the video is paused while the hero is off screen, so it is not decoded for nothing
+			if (this.visible) this.tryPlay();
+			else this.video.pause();
+		}).observe(this.canvas);
 
 		for (const type of ['touchstart', 'pointerdown', 'keydown']) {
 			window.addEventListener(type, () => this.tryPlay(), { once: true, passive: true });

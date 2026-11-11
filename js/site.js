@@ -1,5 +1,5 @@
-// Page behaviour: scroll reveals, the looping ticker, the floating header,
-// the phone menu and the four-teams list.
+// Page behaviour: scroll reveals, the floating header, the phone menu,
+// the four-teams list and the team tiles.
 
 // Fade things in as they scroll into view. The CSS does the animating.
 const revealer = new IntersectionObserver((entries) => {
@@ -13,27 +13,22 @@ const revealer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach((el) => revealer.observe(el));
 
 
-// Ticker. Copy the word list until it covers the screen twice, then slide
-// by exactly one copy so the loop has no jump.
-function buildTicker() {
-	const track = document.querySelector('.ticker .track');
-	const first = track.children[0];
+// Record chart. Between 901px and 1420px wide the desktop layout is kept but
+// shrunk to fit (the CSS gives it a fixed width of 1260px).
+const chart = document.querySelector('.rec-chart');
 
-	// start from one copy again (this also runs on resize)
-	while (track.children.length > 1) track.lastChild.remove();
+function fitChart() {
+	chart.style.zoom = '';
+	if (innerWidth < 901 || innerWidth > 1420) return;
 
-	const groupWidth = first.getBoundingClientRect().width;
-	const copies = Math.ceil((innerWidth * 2) / groupWidth) + 1;
-	for (let i = 1; i < copies; i++) {
-		track.appendChild(first.cloneNode(true));
-	}
-
-	track.style.setProperty('--ticker-shift', groupWidth + 'px');
-	track.style.setProperty('--ticker-duration', groupWidth / 70 + 's'); // 70px a second
+	const section = chart.parentElement;
+	const style = getComputedStyle(section);
+	const room = section.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+	chart.style.zoom = Math.min(1, room / 1260);
 }
 
-document.fonts.ready.then(buildTicker);
-addEventListener('resize', buildTicker);
+fitChart();
+addEventListener('resize', fitChart);
 
 
 // Header. It slides away when you scroll down and comes back when you

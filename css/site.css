@@ -154,79 +154,109 @@ section {
 }
 
 
-/* Floating header */
+/* Floating header: a compact frosted-glass pill, centred at the top, leaned forward a little so its
+   corners are angular but smooth. The logo, the links and a white Join button sit inside it, and the
+   current section's link gets a lighter glass highlight. Everything inside is leaned back so the text
+   and logo stay upright. */
 
 header {
+	--lean: -9deg;
+	--unlean: 9deg;
 	position: fixed;
-	top: 20px;
+	top: 18px;
 	left: 50%;
 	z-index: 20;
 	display: flex;
 	align-items: center;
-	gap: 28px;
-	padding: 10px 12px 10px 22px;
-	border-radius: 999px;
+	gap: 14px;
+	padding: 8px 8px 8px 22px;
+	border-radius: 22px 10px 22px 10px;
 	isolation: isolate;
-	background: rgba(255, 255, 255, 0.07);
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)), rgba(10, 26, 69, 0.55);
 	backdrop-filter: blur(16px) saturate(130%);
 	-webkit-backdrop-filter: blur(16px) saturate(130%);
-	border: 1px solid rgba(255, 255, 255, 0.14);
-	box-shadow: 0 10px 30px rgba(2, 8, 28, 0.35);
-	transform: translateX(-50%);
+	border: 1px solid rgba(255, 255, 255, 0.16);
+	box-shadow: 0 10px 30px rgba(2, 8, 28, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+	transform: translateX(-50%) skewX(var(--lean));
 	transition: transform 0.6s var(--ease), background 0.4s;
 }
 
 header:hover {
-	background: rgba(255, 255, 255, 0.1);
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05)), rgba(10, 26, 69, 0.65);
 }
 
 header.hide {
-	transform: translate(-50%, -160%);
+	transform: translateX(-50%) skewX(var(--lean)) translateY(-170%);
 }
 
-header > a:first-child {
+.brand {
 	display: flex;
 	align-items: center;
 	min-height: 44px;
+	padding-right: 6px;
+}
+
+.brand img,
+header nav a span,
+header .btn span {
+	display: block;
+	transform: skewX(var(--unlean));
 }
 
 header img {
-	display: block;
-	height: 40px;
+	height: 34px;
 }
 
 header nav {
 	display: flex;
-	gap: 24px;
-	font-size: 15px;
+	align-items: center;
+	gap: 2px;
 }
 
 header nav a {
-	padding: 8px 14px;
-	border-radius: 999px;
-	opacity: 0.75;
+	display: flex;
+	align-items: center;
+	height: 44px;
+	padding: 0 18px;
+	border-radius: 14px 6px 14px 6px;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 500;
+	opacity: 0.78;
 	transition: opacity 0.2s, background 0.3s;
 }
 
+/* a hovered link gets a lighter glass highlight */
 header nav a:hover {
 	opacity: 1;
-	background: rgba(255, 255, 255, 0.14);
+	background: rgba(255, 255, 255, 0.16);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+.bar-end {
+	display: flex;
+	align-items: center;
+}
+
+/* Join: the white button, leaning with the bar */
 header .btn {
-	padding: 12px 22px;
+	display: flex;
+	align-items: center;
+	height: 44px;
+	padding: 0 26px;
+	border-radius: 14px 6px 14px 6px;
+	background: rgba(255, 255, 255, 0.94);
+	box-shadow: 0 4px 14px rgba(2, 8, 28, 0.3), inset 0 1px 0 #fff;
+	color: var(--navy);
 	font-size: 14px;
+	font-weight: 700;
 	white-space: nowrap;
 }
 
-header .btn--white {
-	background: rgba(255, 255, 255, 0.92);
-	box-shadow: 0 4px 14px rgba(2, 8, 28, 0.3), inset 0 1px 0 #fff;
-}
-
-/* no zoom on the Join button inside the pill */
+/* no zoom on the Join button */
 header .btn:hover {
 	transform: none;
+	background: #fff;
 }
 
 .menu-btn {
@@ -305,44 +335,6 @@ header .btn:hover {
 	display: flex;
 	gap: 14px;
 	flex-wrap: wrap;
-}
-
-
-/* Ticker */
-
-.ticker {
-	overflow: hidden;
-	padding-block: 28px 12px;
-	color: rgba(169, 189, 232, 0.6);
-	white-space: nowrap;
-}
-
-.ticker .track {
-	display: flex;
-	width: max-content;
-	animation: slide var(--ticker-duration, 30s) linear infinite;
-}
-
-.ticker .group {
-	display: flex;
-	flex-shrink: 0;
-	align-items: center;
-	gap: 44px;
-	padding-right: 44px;
-	font-size: clamp(22px, 2.6vw, 38px);
-	font-weight: 700;
-	letter-spacing: -0.02em;
-}
-
-.ticker i {
-	color: var(--sky);
-	opacity: 0.7;
-	font-size: 0.6em;
-	font-style: normal;
-}
-
-@keyframes slide {
-	to { transform: translateX(calc(-1 * var(--ticker-shift, 50%))); }
 }
 
 
@@ -554,7 +546,7 @@ header .btn:hover {
 .rec-chart {
 	display: flex;
 	align-items: flex-end;
-	gap: clamp(12px, 1.8vw, 24px);
+	gap: clamp(10px, 1.4vw, 20px);
 	height: 440px;
 	margin-top: 64px;
 }
@@ -647,8 +639,17 @@ header .btn:hover {
 }
 
 .rec-ref--eiffel { --ref: url(../assets/landmarks/eiffel.svg); }
-.rec-ref--ben { --ref: url(../assets/landmarks/ben-nevis.png); }
-.rec-ref--blanc { --ref: url(../assets/landmarks/mont-blanc.png); }
+.rec-ref--ben { --ref: url(../assets/landmarks/ben-nevis.webp); }
+.rec-ref--blanc { --ref: url(../assets/landmarks/mont-blanc.webp); }
+
+/* each landmark gets its own tone so they don't blend, but only slightly: Mont Blanc a touch deeper, Ben Nevis a touch lighter */
+.rec-ref--blanc {
+	background: color-mix(in srgb, var(--soft) 72%, var(--royal));
+}
+
+.rec-ref--ben {
+	background: color-mix(in srgb, #fff 55%, var(--soft));
+}
 
 
 /* Speed comparison */
@@ -680,11 +681,11 @@ header .btn:hover {
 	mask: var(--icon) center / contain no-repeat;
 }
 
-.spd-icon--sprinter { --icon: url(../assets/icons/sprinter.png); }
-.spd-icon--cheetah { --icon: url(../assets/icons/cheetah.png); }
-.spd-icon--f1 { --icon: url(../assets/icons/f1.png); }
-.spd-icon--harrier { --icon: url(../assets/icons/harrier.png); }
-.spd-icon--rocket { --icon: url(../assets/icons/rocket.png); }
+.spd-icon--sprinter { --icon: url(../assets/icons/sprinter.webp); }
+.spd-icon--cheetah { --icon: url(../assets/icons/cheetah.webp); }
+.spd-icon--f1 { --icon: url(../assets/icons/f1.webp); }
+.spd-icon--harrier { --icon: url(../assets/icons/harrier.webp); }
+.spd-icon--rocket { --icon: url(../assets/icons/rocket.webp); }
 
 .spd-name {
 	margin-bottom: 10px;
@@ -734,6 +735,14 @@ header .btn:hover {
 
 .l4c {
 	background: linear-gradient(180deg, var(--c2c), var(--c3));
+}
+
+.l4c-blurb {
+	max-width: 58ch;
+	margin-top: 40px;
+	color: var(--soft);
+	font-size: clamp(18px, 1.6vw, 22px);
+	line-height: 1.6;
 }
 
 .nums {
@@ -818,7 +827,6 @@ header .btn:hover {
 	font: inherit;
 	text-align: left;
 	cursor: pointer;
-	will-change: transform;
 }
 
 .person .photo {
@@ -1032,35 +1040,49 @@ header .btn:hover {
 }
 
 
-/* Sponsors */
+/* Sponsors: one panel. The two main sponsors sit side by side at the top, and the society sponsors'
+   logos sit in a strip along the bottom, so everything reads as a single group. */
 
 .sponsors {
 	background: var(--c4);
 }
 
+.sp-panel {
+	margin-top: 56px;
+	overflow: hidden;
+	border-radius: 28px;
+	background:
+		radial-gradient(120% 90% at 50% 0%, rgba(141, 184, 255, 0.14), transparent 70%),
+		linear-gradient(180deg, rgba(141, 184, 255, 0.07), rgba(141, 184, 255, 0.02));
+}
+
 .sp-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: clamp(16px, 2.4vw, 32px);
-	margin-top: 56px;
 }
 
 .sp-card {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	padding: clamp(24px, 3vw, 44px);
-	border-radius: 20px;
-	background: rgba(141, 184, 255, 0.07);
-	border: 1px solid rgba(141, 184, 255, 0.2);
-	transition: opacity 0.9s var(--ease), transform 0.5s var(--ease), background 0.4s, border-color 0.4s, box-shadow 0.5s var(--ease);
+	padding: clamp(24px, 3.4vw, 52px);
+	transition: background 0.4s;
+}
+
+/* the divider is a line that fades out at both ends, so it blends into the panel */
+.sp-card + .sp-card::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 10%;
+	bottom: 10%;
+	width: 1px;
+	background: linear-gradient(180deg, transparent, rgba(141, 184, 255, 0.3), transparent);
 }
 
 .sp-card:hover {
-	transform: translateY(-8px);
-	background: rgba(141, 184, 255, 0.12);
-	border-color: rgba(141, 184, 255, 0.45);
-	box-shadow: 0 24px 60px rgba(2, 8, 28, 0.35);
+	background: linear-gradient(180deg, rgba(141, 184, 255, 0.07), transparent);
 }
 
 .sp-logo {
@@ -1079,15 +1101,26 @@ header .btn:hover {
 	transform: scale(1.04);
 }
 
+/* the society sponsors: a row along the bottom of the panel, logos only, under a fading line */
 .sp-logos {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: clamp(28px, 5vw, 64px);
-	margin-top: 48px;
+	gap: clamp(36px, 7vw, 96px);
+	padding: 32px 24px 36px;
 }
 
-/* the society sponsors: logos only, smaller */
+.sp-logos::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 8%;
+	right: 8%;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, rgba(141, 184, 255, 0.3), transparent);
+}
+
 .sp-mini {
 	display: block;
 	height: 44px;
@@ -1169,26 +1202,169 @@ footer span {
 
 /* Responsive */
 
-/* the record chart has eight columns, so on mid-size screens it scrolls sideways */
-@media (min-width: 721px) and (max-width: 1180px) {
+/* From 901px to 1420px the desktop chart keeps its layout at a fixed 1260px width, and site.js shrinks it to fit */
+@media (min-width: 901px) and (max-width: 1420px) {
 	.rec-chart {
-		overflow-x: auto;
-		overflow-y: hidden;
-		padding-bottom: 8px;
-		scrollbar-width: thin;
-		scrollbar-color: rgba(169, 189, 232, 0.5) transparent;
+		width: 1260px;
+	}
+}
+
+/* On phones and small tablets the record chart becomes a vertical altitude ladder */
+@media (max-width: 900px) {
+	/* the record chart as an altitude ladder: one column at 72px per km (the desktop scale is 60, so
+	   everything is multiplied by --k). The rockets are dashed lines at their heights, the landmarks stand
+	   on the ground line, and a small table names the landmarks. */
+	.rec-chart {
+		--k: 1.2;
+		--ground: 372px;
+		--mb: min(calc(100% - 112px), clamp(228px, 40%, 400px));   /* Mont Blanc's width, always leaving room for the labels */
+		--bw: clamp(112px, 20%, 200px);   /* Ben Nevis's width */
+		display: block;
+		position: relative;
+		max-width: 680px;
+		height: auto;
+		margin-top: 44px;
+		padding-top: calc(var(--ground) + 16px);
+		overflow: visible;
 	}
 
+	/* the ground */
+	.rec-chart::after {
+		content: "";
+		position: absolute;
+		top: var(--ground);
+		left: 0;
+		right: 0;
+		border-top: 2px solid rgba(169, 189, 232, 0.55);
+	}
+
+	.rec-divider {
+		display: none;
+	}
+
+	.rec-col {
+		height: auto;
+		transform: none;
+	}
+
+	/* rockets: a label sitting on a dashed line at the rocket's height */
 	.rec-col:not(.rec-col--ref) {
-		flex: 0 0 120px;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: calc(var(--ground) - var(--h) * var(--k) - 24px);
+		z-index: 0;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		grid-template-areas: "name value" "line line";
+		column-gap: 8px;
+		align-items: baseline;
 	}
 
-	.rec-col--target {
-		flex-basis: 170px;
+	.rec-col:not(.rec-col--ref) .rec-name {
+		position: relative;
+		z-index: 3;
+		grid-area: name;
+		margin: 0;
+		font-size: 12px;
 	}
 
+	.rec-col:not(.rec-col--ref) .rec-value {
+		position: relative;
+		z-index: 3;
+		grid-area: value;
+		margin: 0;
+		font-size: 12px;
+		color: var(--soft);
+	}
+
+	.rec-col:not(.rec-col--ref) .rec-year {
+		display: none;
+	}
+
+	.rec-col:not(.rec-col--ref) .rec-bar {
+		grid-area: line;
+		height: 0;
+		margin-top: 5px;
+		border-radius: 0;
+		border-top: 1px dashed rgba(169, 189, 232, 0.7);
+		background: none;
+		box-shadow: none;
+		transform: scaleX(0);
+		transform-origin: left;
+		transition-duration: 1.2s;
+	}
+
+	.rec-col.in:not(.rec-col--ref) .rec-bar {
+		transform: none;
+	}
+
+	.rec-col--target .rec-name,
+	.rec-col--target .rec-value {
+		font-size: 13px;
+		font-weight: 800;
+		color: var(--sky);
+	}
+
+	.rec-col--target .rec-bar {
+		border-top: 2px solid var(--sky);
+		box-shadow: 0 0 14px rgba(141, 184, 255, 0.5);
+	}
+
+	/* landmarks stand on the ground, to the right of the labels */
+	.rec-ref {
+		position: absolute;
+		top: calc(var(--ground) - var(--h) * var(--k));
+		height: calc(var(--h) * var(--k));
+		z-index: 1;
+		opacity: 0.9;
+	}
+
+	.rec-ref--eiffel {
+		right: calc(var(--mb) + 6px);
+	}
+
+	.rec-ref--ben {
+		right: calc(var(--mb) - 2px - var(--bw));
+		z-index: 2;
+		width: var(--bw);
+		aspect-ratio: auto;
+	}
+
+	/* the photo was cropped, so its left edge is softened */
+	.rec-ref--blanc {
+		right: 0;
+		width: var(--mb);
+		aspect-ratio: auto;
+		-webkit-mask: var(--ref) center / 100% 100% no-repeat, linear-gradient(90deg, transparent, #000 14%);
+		-webkit-mask-composite: source-in;
+		mask: var(--ref) center / 100% 100% no-repeat, linear-gradient(90deg, transparent, #000 14%);
+		mask-composite: intersect;
+	}
+
+	/* the table that names the landmarks */
 	.rec-col--ref {
-		padding-right: 8px;
+		display: flex;
+		flex-direction: row-reverse;
+		justify-content: space-between;
+		align-items: baseline;
+		padding: 12px 0;
+		border-top: 1px solid rgba(169, 189, 232, 0.2);
+	}
+
+	.rec-col--ref .rec-value {
+		margin: 0;
+		font-size: 15px;
+		color: var(--soft);
+	}
+
+	.rec-col--ref .rec-name {
+		margin: 0;
+		font-size: 15px;
+	}
+
+	.rec-col--ref .rec-year {
+		display: none;
 	}
 }
 
@@ -1197,10 +1373,10 @@ footer span {
 		grid-template-columns: 1fr;
 	}
 
-	/* the nav links move into a menu under the pill */
+	/* the links move into a menu under the bar, with a button to open it */
 	header {
-		gap: 14px;
-		padding: 8px 8px 8px 18px;
+		gap: 8px;
+		padding: 6px 6px 6px 18px;
 	}
 
 	.menu-btn {
@@ -1209,9 +1385,10 @@ footer span {
 		gap: 6px;
 		width: 44px;
 		height: 44px;
+		padding: 0;
 		border: 0;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.1);
+		border-radius: 14px 6px 14px 6px;
+		background: rgba(255, 255, 255, 0.12);
 		cursor: pointer;
 	}
 
@@ -1221,30 +1398,42 @@ footer span {
 		height: 2px;
 		border-radius: 2px;
 		background: #fff;
+		transform: skewX(var(--unlean));
 		transition: transform 0.3s var(--ease);
 	}
 
 	header.open .menu-btn span:first-child {
-		transform: translateY(4px) rotate(45deg);
+		transform: skewX(var(--unlean)) translateY(4px) rotate(45deg);
 	}
 
 	header.open .menu-btn span:last-child {
-		transform: translateY(-4px) rotate(-45deg);
+		transform: skewX(var(--unlean)) translateY(-4px) rotate(-45deg);
 	}
 
+	header .btn {
+		padding: 0 22px;
+	}
+
+	/* the dropdown is leaned back upright: a frosted card with the same uneven corners */
 	header nav {
 		display: none;
 		position: absolute;
 		top: calc(100% + 10px);
 		left: 0;
-		right: 0;
+		right: -20px;
+		min-width: 220px;
 		flex-direction: column;
+		align-items: stretch;
 		gap: 0;
 		padding: 8px;
-		border-radius: 24px;
-		background: #08101E;
+		border-radius: 22px 10px 22px 10px;
+		background: rgba(8, 16, 40, 0.94);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		border: 1px solid rgba(255, 255, 255, 0.16);
 		box-shadow: 0 20px 50px rgba(2, 8, 28, 0.6);
-		border: 1px solid rgba(255, 255, 255, 0.14);
+		transform: skewX(var(--unlean));
+		transform-origin: 50% 0;
 	}
 
 	header.open nav {
@@ -1252,9 +1441,15 @@ footer span {
 	}
 
 	header nav a {
-		padding: 14px 16px;
-		font-size: 18px;
+		height: 48px;
+		padding: 0 16px;
+		justify-content: flex-start;
+		font-size: 16px;
 		opacity: 1;
+	}
+
+	header nav a span {
+		transform: none;
 	}
 }
 
@@ -1294,78 +1489,12 @@ footer span {
 		text-align: center;
 	}
 
-	.ticker {
-		padding-block: 20px 4px;
-	}
-
 	.item {
 		padding: 24px 0;
 	}
 
 	.item h3 {
 		font-size: clamp(30px, 8.4vw, 44px);
-	}
-
-	/* the record chart: rockets in one row, landmarks in a second row, both at a smaller scale */
-	.rec-chart {
-		flex-wrap: wrap;
-		align-items: flex-end;
-		gap: 10px;
-		height: auto;
-		margin-top: 44px;
-		overflow: visible;
-	}
-
-	.rec-col {
-		flex: 1 1 0;
-		height: auto;
-	}
-
-	.rec-col--target {
-		flex-grow: 1.5;
-	}
-
-	.rec-divider {
-		flex: 0 0 100%;
-		width: auto;
-		height: 0;
-		margin: 20px 0 8px;
-		border-left: 0;
-		border-top: 1px dashed rgba(169, 189, 232, 0.35);
-	}
-
-	.rec-col--ref {
-		flex: 0 0 auto;
-	}
-
-	.rec-bar,
-	.rec-ref {
-		height: calc(var(--h) * 0.45);
-	}
-
-	.rec-bar {
-		min-height: 3px;
-	}
-
-	.rec-value {
-		font-size: 18px;
-	}
-
-	.rec-col--target .rec-value {
-		font-size: 26px;
-	}
-
-	.rec-col--ref .rec-value {
-		font-size: 15px;
-	}
-
-	.rec-name {
-		margin-top: 10px;
-		font-size: 12px;
-	}
-
-	.rec-year {
-		font-size: 11px;
 	}
 
 	.spd-bar {
@@ -1463,9 +1592,26 @@ footer span {
 		font-size: 17px;
 	}
 
+	.sp-panel {
+		margin-top: 40px;
+	}
+
 	.sp-grid {
 		grid-template-columns: 1fr;
-		margin-top: 40px;
+	}
+
+	.sp-card + .sp-card::before {
+		top: 0;
+		bottom: auto;
+		left: 8%;
+		right: 8%;
+		width: auto;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, rgba(141, 184, 255, 0.3), transparent);
+	}
+
+	.sp-logos {
+		padding: 28px 16px 32px;
 	}
 
 	.out-stats {
@@ -1477,9 +1623,6 @@ footer span {
 		font-size: clamp(64px, 20vw, 96px);
 	}
 
-	.sp-logos {
-		margin-top: 36px;
-	}
 }
 
 /* touch screens have no hover, so no sweep or inset on the rows */
@@ -1515,10 +1658,6 @@ footer span {
 	.rec-ref {
 		transform: none;
 		transition: none;
-	}
-
-	.ticker .track {
-		animation: none;
 	}
 
 	* {
