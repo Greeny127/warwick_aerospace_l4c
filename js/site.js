@@ -1,5 +1,5 @@
 // Page behaviour: scroll reveals, the floating header, the phone menu,
-// the four-teams list and the team tiles.
+// the four-teams list and the team grid.
 
 // Fade things in as they scroll into view. The CSS does the animating.
 const revealer = new IntersectionObserver((entries) => {
@@ -218,147 +218,140 @@ addEventListener('keydown', (event) => {
 })();
 
 
-// Team. Clicking a person slides that person's tile to the left, fades the
-// others out and opens a big tile with their details next to it. Click the
-// tile again, the close button, or press Esc to go back. Everything moves at
-// the same time: the tiles that leave are pinned where they were and fade
-// out while the chosen tile slides.
+// Team. The tabs filter one grid of people by subteam. It opens on Leadership
+// and steps through the tabs by itself (only while it is on screen) until the
+// visitor clicks anything. Clicking a person opens their details in place:
+// the tile stretches across the row and the other tiles glide to their new spots.
 (function () {
-	const row = document.querySelector('.scroller');
-	if (!row) return;
+	const section = document.querySelector('#team');
+	if (!section) return;
 
-	const people = [...row.querySelectorAll('.person')];
-	const phone = matchMedia('(max-width: 720px)');
-	let busy = false;
+	const chips = [...section.querySelectorAll('.chip')];
+	const people = [...section.querySelectorAll('.person')];
+	const grid = section.querySelector('.people');
+	const calm = matchMedia('(prefers-reduced-motion: reduce)');
+	// One motion language for the whole section. Things that appear fade in while
+	// rising 18px, one after another. Things that stay glide to their new place.
+	// Same duration, same easing, same 50ms stagger everywhere.
+	const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+	const DUR = 550;
+	const STAGGER = 50;
+	const RISE = '18px';
+	let current = chips[0].dataset.filter;
+	let touched = false;
+	let timer = 0;
+	let token = 0;
 
-	// where an element is, measured from the row's top left
-	function rectIn(el) {
-		const r = el.getBoundingClientRect();
-		const b = row.getBoundingClientRect();
-		return { left: r.left - b.left + row.scrollLeft, top: r.top - b.top, width: r.width, height: r.height };
+	const visible = () => people.filter((p) => !p.hidden);
+
+	function enter(el, i = 0) {
+		if (calm.matches) return;
+		el.animate(
+			[{ opacity: 0, transform: `translateY(${RISE})` }, { opacity: 1, transform: 'none' }],
+			{ duration: DUR, delay: i * STAGGER, easing: EASE, fill: 'backwards' }
+		);
 	}
 
-	// pin an element where it is so it can fade out without taking up space
-	function pin(el, rect) {
-		el.style.position = 'absolute';
-		el.style.left = rect.left + 'px';
-		el.style.top = rect.top + 'px';
-		el.style.width = rect.width + 'px';
-		el.style.height = rect.height + 'px';
-		el.style.margin = '0';
-		el.classList.add('ghost');
-	}
-
-	function fadeAway(el, done) {
-		requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('out')));
-		setTimeout(() => {
-			el.removeAttribute('style');
-			el.classList.remove('ghost', 'out');
-			done();
-		}, 260);
-	}
-
-	// slide a tile from where it was to where it is now
-	function slideTile(tile, before) {
-		const after = tile.getBoundingClientRect();
-		tile.style.transition = 'none';
-		tile.style.transform = `translate(${before.left - after.left}px, ${before.top - after.top}px)`;
-		tile.offsetWidth; // force a reflow so the starting position applies
-		tile.style.transition = 'transform 0.45s var(--ease)';
-		tile.style.transform = '';
-		setTimeout(() => { tile.style.transition = ''; }, 500);
-	}
-
-	function lock() {
-		busy = true;
-		setTimeout(() => { busy = false; }, 500);
+	// run a change; tiles that stayed glide from where they were to where they are,
+	// and the tile that just opened or closed (`entering`) fades in like any new arrival
+	function glide(change, entering) {
+		const before = new Map(visible().map((p) => [p, p.getBoundingClientRect()]));
+		change();
+		if (calm.matches) return;
+		visible().forEach((p) => {
+			if (p === entering) return;
+			const from = before.get(p);
+			if (!from) return;
+			const to = p.getBoundingClientRect();
+			const dx = from.left - to.left;
+			const dy = from.top - to.top;
+			if (dx || dy) p.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration: DUR, easing: EASE });
+		});
+		if (entering) enter(entering);
 	}
 
 	function setOpen(person, open) {
-		person.classList.toggle('active', open);
-		person.querySelector('.person-tile').setAttribute('aria-expanded', String(open));
-		row.classList.toggle('open', open);
-	}
-
-	// phones: a plain accordion. One person is open at a time, right under their name.
-	function phoneSet(person, open) {
-		person.classList.toggle('active', open);
+		person.classList.toggle('open', open);
 		person.querySelector('.person-bio').hidden = !open;
 		person.querySelector('.person-tile').setAttribute('aria-expanded', String(open));
 	}
 
-	function phoneToggle(person) {
-		const wasOpen = person.classList.contains('active');
-		people.forEach((p) => phoneSet(p, false));
-		if (wasOpen) return;
-		phoneSet(person, true);
-		setTimeout(() => person.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+	function closeAll() {
+		people.filter((p) => p.classList.contains('open')).forEach((p) => setOpen(p, false));
 	}
 
-	// going between phone and desktop sizes: start again from everyone closed
-	phone.addEventListener('change', () => {
-		row.classList.remove('open');
-		people.forEach((p) => {
-			phoneSet(p, false);
-			p.removeAttribute('style');
-			p.classList.remove('ghost', 'out', 'enter');
-		});
-	});
+	// switching tabs: the old tiles fade out together, then the new ones rise in one by one
+	async function show(f) {
+		current = f;
+		const mine = ++token;
+		chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filter === f)));
 
-	function openPerson(person) {
-		lock();
-		row.scrollLeft = 0;
+		const leaving = visible();
+		if (leaving.length && !calm.matches) {
+			await Promise.all(leaving.map((p) => p.animate(
+				[{ opacity: 1 }, { opacity: 0 }],
+				{ duration: DUR * 0.35, easing: 'ease-in', fill: 'forwards' }
+			).finished));
+			if (mine !== token) return;
+			leaving.forEach((p) => p.getAnimations().forEach((a) => a.cancel()));
+		}
 
-		const tile = person.querySelector('.person-tile');
-		const before = tile.getBoundingClientRect();
-		const others = people.filter((p) => p !== person);
-		const rects = others.map(rectIn);
-
-		others.forEach((p, i) => pin(p, rects[i]));
-		setOpen(person, true);
-		person.querySelector('.person-bio').hidden = false;
-
-		slideTile(tile, before);
-		others.forEach((p) => fadeAway(p, () => {}));
+		closeAll();
+		people.forEach((p) => { p.hidden = p.dataset.team !== f; });
+		visible().forEach((p, i) => enter(p, i));
 	}
 
-	function closePerson() {
-		const person = row.querySelector('.person.active');
-		if (!person) return;
-		if (phone.matches) { phoneSet(person, false); return; }
-		if (busy) return;
-		lock();
-
-		const tile = person.querySelector('.person-tile');
-		const bio = person.querySelector('.person-bio');
-		const before = tile.getBoundingClientRect();
-		const others = people.filter((p) => p !== person);
-
-		pin(bio, rectIn(bio));
-		fadeAway(bio, () => { bio.hidden = true; });
-
-		setOpen(person, false);
-		row.classList.add('returning');
-		setTimeout(() => row.classList.remove('returning'), 600);
-		others.forEach((p) => p.classList.add('enter'));
-		slideTile(tile, before);
-
-		requestAnimationFrame(() => {
-			others.forEach((p) => p.classList.remove('enter'));
-		});
+	// the automatic tour
+	function stop() {
+		touched = true;
+		clearInterval(timer);
 	}
+
+	function start() {
+		if (touched || calm.matches) return;
+		clearInterval(timer);
+		timer = setInterval(() => {
+			const i = chips.findIndex((c) => c.dataset.filter === current);
+			show(chips[(i + 1) % chips.length].dataset.filter);
+		}, 4000);
+	}
+
+	new IntersectionObserver((entries) => {
+		if (entries[0].isIntersecting) start();
+		else clearInterval(timer);
+	}, { threshold: 0.3 }).observe(section);
+
+	chips.forEach((chip) => chip.addEventListener('click', () => {
+		stop();
+		show(chip.dataset.filter);
+	}));
 
 	people.forEach((person) => {
-		person.querySelector('.person-tile').addEventListener('click', () => {
-			if (phone.matches) { phoneToggle(person); return; }
-			if (busy) return;
-			if (person.classList.contains('active')) closePerson();
-			else openPerson(person);
+		const tile = person.querySelector('.person-tile');
+		tile.setAttribute('aria-expanded', 'false');
+		tile.addEventListener('click', () => {
+			stop();
+			const wasOpen = person.classList.contains('open');
+			glide(() => {
+				closeAll();
+				if (!wasOpen) setOpen(person, true);
+			}, person);
+			// the open card sits at the top of the grid, so bring the top of the grid into view.
+			// (Measure the grid, not the card: the card is mid-glide and its position is misleading.)
+			if (!wasOpen) {
+				const top = grid.getBoundingClientRect().top;
+				if (top < 110) scrollTo({ top: scrollY + top - 110, behavior: calm.matches ? 'auto' : 'smooth' });
+			}
 		});
-		person.querySelector('.bio-close').addEventListener('click', closePerson);
+		person.querySelector('.bio-close').addEventListener('click', () => {
+			stop();
+			glide(() => setOpen(person, false), person);
+		});
 	});
 
 	addEventListener('keydown', (event) => {
-		if (event.key === 'Escape') closePerson();
+		if (event.key !== 'Escape') return;
+		const open = people.find((p) => p.classList.contains('open'));
+		if (open) glide(() => setOpen(open, false), open);
 	});
 })();

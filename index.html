@@ -6,7 +6,8 @@
 	<meta name="theme-color" content="#05080F">
 	<title>Warwick Aerospace: Launch 4 Change</title>
 	<meta name="description" content="Warwick Aerospace is building a rocket to reach 15,000 ft for Launch 4 Change.">
-	<link rel="icon" href="assets/logo-navy.png">
+	<link rel="icon" type="image/png" href="assets/favicon.png">
+	<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
@@ -15,7 +16,7 @@
 <body>
 
 <header id="bar">
-	<a class="brand" href="#top"><img src="assets/logo-white.png" alt="Warwick Aerospace" width="46" height="34"></a>
+	<a class="brand" href="#top"><img src="assets/logo-wr27-white.png" alt="WR27, Warwick Aerospace" width="130" height="30"></a>
 	<nav id="menu" aria-label="Main">
 		<a href="#mission"><span>Mission</span></a>
 		<a href="#disciplines"><span>Subteams</span></a>
@@ -197,14 +198,21 @@
 
 	<section id="team" class="team">
 		<h2 class="big reveal">The rocket team.</h2>
-		<div class="scroller">
-			<article class="person reveal">
-				<button class="person-tile" type="button" aria-expanded="false" aria-controls="bio-matteo">
+		<div class="chips reveal" role="group" aria-label="Filter the team">
+			<button type="button" class="chip" aria-pressed="true" data-filter="lead"><b>Leadership</b></button>
+			<button type="button" class="chip" aria-pressed="false" data-filter="airframe"><b>Airframe</b></button>
+			<button type="button" class="chip" aria-pressed="false" data-filter="sim"><b>Modelling &amp; Simulation</b></button>
+			<button type="button" class="chip" aria-pressed="false" data-filter="payload"><b>Climate Payload</b></button>
+			<button type="button" class="chip" aria-pressed="false" data-filter="ev"><b>EV Integration</b></button>
+		</div>
+		<ul class="people">
+			<li class="person" data-team="lead">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
 					<span class="photo"><img src="assets/team/matteo-furbatto.jpg" alt="Matteo Furbatto" width="600" height="600" loading="lazy" decoding="async"></span>
 					<span class="person-name">Matteo Furbatto</span>
 					<span class="person-role">Team Lead</span>
 				</button>
-				<div class="person-bio" id="bio-matteo" hidden>
+				<div class="person-bio" hidden>
 					<button class="bio-close" type="button" aria-label="Close">&times;</button>
 					<h3>Matteo Furbatto</h3>
 					<dl>
@@ -214,14 +222,252 @@
 					</dl>
 					<p>I&rsquo;m an electromechanical apprentice with hands-on experience across the full spectrum of vehicle electrification, ranging from battery design and performance analysis to harness development and hardware validation. Through multiple rotations, I&rsquo;ve built a strong foundation in both design and testing while contributing to cutting-edge programs in motorsport, commercial EVs, and off-highway platforms.</p>
 				</div>
-			</article>
-			<article class="person reveal" data-delay="1">
-				<button class="person-tile" type="button" aria-expanded="false" aria-controls="bio-sohan">
+			</li>
+			<li class="person" data-team="lead">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" data-team="lead">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="airframe">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="airframe">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="airframe">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="airframe">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="sim">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="sim">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="sim">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="sim">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="payload">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="payload">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="payload">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="payload">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
+					<span class="photo"></span>
+					<span class="person-name">[Name]</span>
+					<span class="person-role">[Role]</span>
+				</button>
+				<div class="person-bio" hidden>
+					<button class="bio-close" type="button" aria-label="Close">&times;</button>
+					<h3>[Name]</h3>
+					<dl>
+						<div><dt>Role</dt><dd>[Role]</dd></div>
+						<div><dt>Degree</dt><dd>[Degree]</dd></div>
+						<div><dt>Year</dt><dd>[Year]</dd></div>
+					</dl>
+					<p>[Bio]</p>
+				</div>
+			</li>
+			<li class="person" hidden data-team="ev">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
 					<span class="photo"><img src="assets/team/sohan-pillai.jpg" alt="Sohan Sharad Pillai" width="600" height="800" loading="lazy" decoding="async"></span>
 					<span class="person-name">Sohan Sharad Pillai</span>
 					<span class="person-role">Embedded Systems Lead</span>
 				</button>
-				<div class="person-bio" id="bio-sohan" hidden>
+				<div class="person-bio" hidden>
 					<button class="bio-close" type="button" aria-label="Close">&times;</button>
 					<h3>Sohan Sharad Pillai</h3>
 					<dl>
@@ -231,14 +477,14 @@
 					</dl>
 					<p>[Bio]</p>
 				</div>
-			</article>
-			<article class="person reveal" data-delay="2">
-				<button class="person-tile" type="button" aria-expanded="false" aria-controls="bio-3">
+			</li>
+			<li class="person" hidden data-team="ev">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
 					<span class="photo"></span>
 					<span class="person-name">[Name]</span>
 					<span class="person-role">[Role]</span>
 				</button>
-				<div class="person-bio" id="bio-3" hidden>
+				<div class="person-bio" hidden>
 					<button class="bio-close" type="button" aria-label="Close">&times;</button>
 					<h3>[Name]</h3>
 					<dl>
@@ -248,14 +494,14 @@
 					</dl>
 					<p>[Bio]</p>
 				</div>
-			</article>
-			<article class="person reveal" data-delay="3">
-				<button class="person-tile" type="button" aria-expanded="false" aria-controls="bio-4">
+			</li>
+			<li class="person" hidden data-team="ev">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
 					<span class="photo"></span>
 					<span class="person-name">[Name]</span>
 					<span class="person-role">[Role]</span>
 				</button>
-				<div class="person-bio" id="bio-4" hidden>
+				<div class="person-bio" hidden>
 					<button class="bio-close" type="button" aria-label="Close">&times;</button>
 					<h3>[Name]</h3>
 					<dl>
@@ -265,14 +511,14 @@
 					</dl>
 					<p>[Bio]</p>
 				</div>
-			</article>
-			<article class="person reveal">
-				<button class="person-tile" type="button" aria-expanded="false" aria-controls="bio-5">
+			</li>
+			<li class="person" hidden data-team="ev">
+				<button class="person-tile" type="button" aria-haspopup="dialog">
 					<span class="photo"></span>
 					<span class="person-name">[Name]</span>
 					<span class="person-role">[Role]</span>
 				</button>
-				<div class="person-bio" id="bio-5" hidden>
+				<div class="person-bio" hidden>
 					<button class="bio-close" type="button" aria-label="Close">&times;</button>
 					<h3>[Name]</h3>
 					<dl>
@@ -282,8 +528,8 @@
 					</dl>
 					<p>[Bio]</p>
 				</div>
-			</article>
-		</div>
+			</li>
+		</ul>
 	</section>
 
 	<section id="outreach" class="outreach">
@@ -329,7 +575,7 @@
 </main>
 
 <footer>
-	<img src="assets/logo-white.png" alt="Warwick Aerospace" width="73" height="54" loading="lazy" decoding="async">
+	<img src="assets/logo-wr27-full-white.png" alt="WR27, Warwick Aerospace" width="223" height="90" loading="lazy" decoding="async">
 	<span>© 2026 Warwick Aerospace | University of Warwick</span>
 </footer>
 
