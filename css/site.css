@@ -545,10 +545,11 @@ header .btn:hover {
 }
 
 .rec-chart {
+	--stack: 368px;   /* the target height: each landmark is stacked up to here */
 	display: flex;
 	align-items: flex-end;
 	gap: clamp(10px, 1.4vw, 20px);
-	height: 440px;
+	height: 540px;
 	margin-top: 64px;
 }
 
@@ -596,17 +597,20 @@ header .btn:hover {
 	transform: none;
 }
 
+/* fixed line heights, so every column's label block is the same height and all the bars and towers start on one line */
 .rec-name {
 	margin-top: 16px;
 	font-weight: 700;
+	line-height: 24px;
 }
 
 .rec-year {
 	color: var(--soft);
 	font-size: 15px;
+	line-height: 22px;
 }
 
-/* landmarks beside the bars, drawn at the same scale (60px per km) */
+/* landmarks beside the bars, stacked up to the target height: --h is one building at the chart scale (80px per km), and the stack repeats it until it reaches --stack. Widths are exaggerated so they read as shapes. */
 
 .rec-divider {
 	flex: none;
@@ -628,28 +632,24 @@ header .btn:hover {
 .rec-ref {
 	flex: none;
 	align-self: center;
-	height: var(--h);
-	aspect-ratio: var(--ar);
-	background: var(--soft);
-	-webkit-mask: var(--ref) center / 100% 100% no-repeat;
-	mask: var(--ref) center / 100% 100% no-repeat;
-	mask-mode: alpha;
+	height: var(--stack);
+	width: calc(var(--h) * var(--ar));
+	background: var(--ref) bottom / 100% var(--h) repeat-y;
 	transform: scaleY(0);
 	transform-origin: bottom;
 	transition: transform 1.5s var(--ease);
 }
 
-.rec-ref--eiffel { --ref: url(../assets/landmarks/eiffel.svg); }
-.rec-ref--ben { --ref: url(../assets/landmarks/ben-nevis.webp); }
-.rec-ref--blanc { --ref: url(../assets/landmarks/mont-blanc.webp); }
+.rec-ref--burj { --ref: url(../assets/landmarks/burj-khalifa.svg); }
 
-/* each landmark gets its own tone so they don't blend, but only slightly: Mont Blanc a touch deeper, Ben Nevis a touch lighter */
-.rec-ref--blanc {
-	background: color-mix(in srgb, var(--soft) 72%, var(--royal));
+/* the landmark labels are smaller so they sit comfortably side by side */
+.rec-col--ref .rec-name {
+	font-size: 14px;
+	white-space: nowrap;
 }
 
-.rec-ref--ben {
-	background: color-mix(in srgb, #fff 55%, var(--soft));
+.rec-col--ref .rec-year {
+	font-size: 12px;
 }
 
 
@@ -659,24 +659,23 @@ header .btn:hover {
 	background: linear-gradient(180deg, var(--c2b), var(--c2c));
 }
 
+/* the speeds as a tight stack of rows: drawing, name, then a bar as long as the speed (the rocket's is the full width) */
+
 .spd-list {
-	display: flex;
-	flex-direction: column;
-	gap: clamp(20px, 3vw, 36px);
-	margin-top: 64px;
+	margin-top: 56px;
 }
 
 .spd-row {
 	display: grid;
-	grid-template-columns: clamp(88px, 14vw, 190px) 1fr;
-	gap: clamp(16px, 3vw, 40px);
+	grid-template-columns: clamp(56px, 6vw, 84px) clamp(110px, 14vw, 190px) 1fr;
 	align-items: center;
+	column-gap: clamp(12px, 2vw, 28px);
+	padding: clamp(12px, 1.4vw, 18px) 0;
 }
 
 /* the drawings are masks, so they take their colour from here */
 .spd-icon {
-	width: 100%;
-	height: clamp(52px, 7vw, 100px);
+	height: clamp(30px, 3.4vw, 46px);
 	background: var(--soft);
 	-webkit-mask: var(--icon) center / contain no-repeat;
 	mask: var(--icon) center / contain no-repeat;
@@ -689,7 +688,7 @@ header .btn:hover {
 .spd-icon--rocket { --icon: url(../assets/icons/rocket.webp); }
 
 .spd-name {
-	margin-bottom: 10px;
+	font-size: clamp(16px, 1.6vw, 20px);
 	font-weight: 700;
 }
 
@@ -701,9 +700,9 @@ header .btn:hover {
 
 .spd-bar {
 	flex: none;
-	width: calc(var(--w) * 0.8);
-	height: clamp(28px, 4vw, 48px);
-	border-radius: 0 12px 12px 0;
+	width: calc(var(--w) * 0.78);
+	height: clamp(22px, 2.6vw, 32px);
+	border-radius: 0 10px 10px 0;
 	background: linear-gradient(90deg, var(--royal), var(--sky));
 	transform: scaleX(0);
 	transform-origin: left;
@@ -715,7 +714,7 @@ header .btn:hover {
 }
 
 .spd-value {
-	font-size: clamp(20px, 2.6vw, 34px);
+	font-size: clamp(18px, 2.2vw, 28px);
 	font-weight: 800;
 	letter-spacing: -0.03em;
 	white-space: nowrap;
@@ -726,9 +725,13 @@ header .btn:hover {
 	color: var(--sky);
 }
 
+.spd-row--target .spd-icon {
+	background: var(--sky);
+}
+
 .spd-row--target .spd-bar {
 	background: linear-gradient(90deg, var(--royal), var(--sky) 60%, #fff);
-	box-shadow: 0 0 50px rgba(141, 184, 255, 0.35);
+	box-shadow: 0 0 40px rgba(141, 184, 255, 0.3);
 }
 
 
@@ -1012,6 +1015,26 @@ header .btn:hover {
 	line-height: 1.6;
 }
 
+.bio-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 44px;
+	margin-top: 24px;
+	padding: 0 24px;
+	border-radius: 14px 6px 14px 6px;
+	background: #fff;
+	color: var(--c3);
+	font-size: 15px;
+	font-weight: 700;
+	transition: transform 0.35s var(--ease), box-shadow 0.35s;
+}
+
+.bio-link:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 18px rgba(2, 8, 28, 0.35);
+}
+
 .person.open .person-bio:not([hidden]) {
 	animation: bio-in 0.55s var(--ease) 0.15s backwards;
 }
@@ -1240,14 +1263,12 @@ footer span {
 
 /* On phones and small tablets the record chart becomes a vertical altitude ladder */
 @media (max-width: 900px) {
-	/* the record chart as an altitude ladder: one column at 72px per km (the desktop scale is 60, so
+	/* the record chart as an altitude ladder: one column at 72px per km (the desktop scale is 80, so
 	   everything is multiplied by --k). The rockets are dashed lines at their heights, the landmarks stand
 	   on the ground line, and a small table names the landmarks. */
 	.rec-chart {
-		--k: 1.2;
+		--k: 0.9;
 		--ground: 372px;
-		--mb: min(calc(100% - 112px), clamp(228px, 40%, 400px));   /* Mont Blanc's width, always leaving room for the labels */
-		--bw: clamp(112px, 20%, 200px);   /* Ben Nevis's width */
 		display: block;
 		position: relative;
 		max-width: 680px;
@@ -1343,32 +1364,13 @@ footer span {
 	/* landmarks stand on the ground, to the right of the labels */
 	.rec-ref {
 		position: absolute;
-		top: calc(var(--ground) - var(--h) * var(--k));
-		height: calc(var(--h) * var(--k));
+		top: calc(var(--ground) - var(--stack) * var(--k));
+		right: 0;
+		height: calc(var(--stack) * var(--k));
+		width: calc(var(--h) * var(--ar) * var(--k));
+		background-size: 100% calc(var(--h) * var(--k));
 		z-index: 1;
 		opacity: 0.9;
-	}
-
-	.rec-ref--eiffel {
-		right: calc(var(--mb) + 6px);
-	}
-
-	.rec-ref--ben {
-		right: calc(var(--mb) - 2px - var(--bw));
-		z-index: 2;
-		width: var(--bw);
-		aspect-ratio: auto;
-	}
-
-	/* the photo was cropped, so its left edge is softened */
-	.rec-ref--blanc {
-		right: 0;
-		width: var(--mb);
-		aspect-ratio: auto;
-		-webkit-mask: var(--ref) center / 100% 100% no-repeat, linear-gradient(90deg, transparent, #000 14%);
-		-webkit-mask-composite: source-in;
-		mask: var(--ref) center / 100% 100% no-repeat, linear-gradient(90deg, transparent, #000 14%);
-		mask-composite: intersect;
 	}
 
 	/* the table that names the landmarks */
@@ -1526,12 +1528,36 @@ footer span {
 		font-size: clamp(30px, 8.4vw, 44px);
 	}
 
+	/* phones: drawing and name on the left, speed on the right, the bar underneath */
+	.spd-row {
+		grid-template-columns: 44px 1fr auto;
+		grid-template-areas: "icon name value" "bar bar bar";
+		row-gap: 10px;
+	}
+
+	.spd-icon {
+		grid-area: icon;
+		height: 26px;
+	}
+
+	.spd-name {
+		grid-area: name;
+		font-size: 16px;
+	}
+
+	.spd-track {
+		display: contents;
+	}
+
 	.spd-bar {
-		width: calc(var(--w) * 0.4);
+		grid-area: bar;
+		width: calc(var(--w) * 1);
+		height: 20px;
 	}
 
 	.spd-value {
-		font-size: 18px;
+		grid-area: value;
+		font-size: 17px;
 	}
 
 	.nums {
@@ -1644,7 +1670,9 @@ footer span {
 	}
 
 	.rec-bar,
-	.rec-ref {
+	.rec-ref,
+	.spd-bar {
+		opacity: 1;
 		transform: none;
 		transition: none;
 	}
